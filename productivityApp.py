@@ -19,6 +19,7 @@ import sys
 from PyQt5.QtWidgets import QWidget, QApplication, QPushButton, QGridLayout, QLineEdit, QMainWindow, QScrollArea, QTextEdit, QListWidget, QDockWidget
 from PyQt5.QtGui import QIcon, QWindow, QPageLayout, QActionEvent
 from PyQt5.QtCore import Qt, pyqtSlot
+import numpy as np
 
 class ProductivityApp(QMainWindow):
     
@@ -74,25 +75,30 @@ class WindowManager(QWidget):
         self.winManagerLayout.addWidget(self.availableApps, 1, 0)
         self.appSearchBox.textChanged.connect(self.updateAppList)
         self.setLayout(self.winManagerLayout)
+        print("Install Location: " + self.apps[10].InstallLocation)
+        print("check " + os.path.dirname(self.apps[2].InstalledProductName))
         self.show()
 
     def updateAppList(self):
         appName = self.appSearchBox.text()
         self.availableApps.clear()
-        availableApps = []
+        availableApps = ["none" for i in range(len(self.apps))]
         if len(appName) == 0:
-            availableApps = ["none" for i in range(len(self.apps))]
             for i in range(len(availableApps)):
                 availableApps[i] = self.apps[i].InstalledProductName
         else:
-            for app in self.apps:
+            #availableApps = np.empty(len(self.apps), dtype='s128')
+            #array_iter = 0
+            availableApps = []
+            for j in range(100):
                 matches = True
                 for i in range(len(appName)):
-                    if app.InstalledProductName[i] != appName[i]:
+                    if self.apps[j].InstalledProductName.upper()[i] != appName.upper()[i]:
                         matches = False
                         break
                 if matches:
-                    availableApps.append(app.InstalledProductName)
+                    availableApps.append(self.apps[j].InstalledProductName)
+                    #array_iter += 1
         self.availableApps.addItems(availableApps)
 
 
