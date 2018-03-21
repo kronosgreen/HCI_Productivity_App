@@ -2,7 +2,7 @@
 #
 #   Productivity App
 #
-#   by Christopher Medrano & Zachary Rivera
+#   by Christopher Medrano & Zachary Mitchell
 #
 
 import os
