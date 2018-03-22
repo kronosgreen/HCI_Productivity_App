@@ -6,3 +6,7 @@ get application to open inside window.
 ***Stretch goals***
 set up multiple tabs for applications.
 allow user to set preferences.
+
+
+***notes for later***
+trying to connect doubleclicked signal to the function
