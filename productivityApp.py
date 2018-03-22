@@ -64,9 +64,11 @@ class WindowManager(QWidget):
         self.width = 800
         self.winFinder = WindowFinder()
         self.appFinder = AppFinder()
-        self.apps = self.appFinder.get_installed_products()
+        self.apps = self.appFinder.shortcut_names
         self.appSearchBox = QLineEdit(self)
         self.availableApps = QListWidget(self)
+        self.availableApps.itemDoubleClicked.connect(self.run_app)
+        self.updateAppList()
         self.winManagerLayout = QGridLayout()
         self.initUI()
 
@@ -84,34 +86,35 @@ class WindowManager(QWidget):
         self.show()
 
     def updateAppList(self):
-        appName = self.appSearchBox.text()
+        app_name = self.appSearchBox.text()
         self.availableApps.clear()
-        availableApps = [self.apps[i] for i in range(len(self.apps))]
-        '''if len(appName) == 0:
-            for i in range(len(availableApps)):
-                availableApps[i] = self.apps[i].InstalledProductName
+        if len(app_name) == 0:
+            availableApps = self.apps
         else:
             #availableApps = np.empty(len(self.apps), dtype='s128')
             #array_iter = 0
             availableApps = []
-            for j in range(100):
+            for j in range(len(self.apps)):
                 matches = True
-                for i in range(len(appName)):
-                    if self.apps[j].InstalledProductName.upper()[i] != appName.upper()[i]:
+                for i in range(len(app_name)):
+                    if self.apps[j].upper()[i] != app_name.upper()[i]:
                         matches = False
                         break
                 if matches:
-                    availableApps.append(self.apps[j].InstalledProductName)
+                    availableApps.append(self.apps[j])
                     #array_iter += 1'''
         self.availableApps.addItems(availableApps)
 
-
-
-    def runApp(self):
+    def run_app(self, item):
         #do something here
-        print("Run App: ")
+        print("Run App: " + item)
+        self.appFinder.run_app(item)
+        self.set_to_window()
 
-    def addWindow(self, windowId):
+    def set_to_window(self):
+        print("Setting to this Window")
+
+    def add_window(self, windowId):
 
         self.appWindow = QWindow.fromWinId(windowId)
         self.appWindow.setFlag(Qt.FramelessWindowHint, True)
@@ -204,14 +207,29 @@ class AppFinder:
     def __init__(self):
         print("Getting Apps")
         self.shortcut_folder = 'C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs'
+        self.PRODUCT_PROPERTIES = [u'URL',
+                                   u'ProductName'
+                                   ]
+        self.shortcuts = []
+        self.shortcut_names = []
+        self.get_shortcuts()
 
-    def get_installed_products(self):
+    def get_shortcuts(self):
         shortcuts = []
+        shortcut_names = []
         for root, dirs, files in os.walk(self.shortcut_folder):
             for file in files:
                 if file.endswith(".lnk"):
+                    shortcut_names.append(os.path.splitext(file)[0])
                     shortcuts.append(os.path.join(root, file))
-        return shortcuts
+        self.shortcuts = shortcuts
+        self.shortcut_names = shortcut_names
+
+    def get_shortcut_names(self):
+        return self.shortcut_names
+
+    def run_app(self, name):
+        print("running app " + name)
 '''
     # defined at http://msdn.microsoft.com/en-us/library/aa370101(v=VS.85).aspx
     def __init__(self):
@@ -317,7 +335,6 @@ class AppFinder:
 
 
 if __name__ == '__main__':
-    #os.startfile('C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\Word 2016.lnk')
     app = QApplication(sys.argv)
     ex = ProductivityApp()
     sys.exit(app.exec_())
