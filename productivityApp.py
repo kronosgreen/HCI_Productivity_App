@@ -4,18 +4,24 @@
 #
 #   by Christopher Medrano & Zachary Mitchell
 #
+#
+#
+#
 
 import os
 import ctypes
 import win32api
 import win32gui
 import win32process
+import win32com.client
+
 import re
 from collections import namedtuple
 from ctypes import byref, create_unicode_buffer, windll
 from ctypes.wintypes import DWORD
 from itertools import count
 import sys
+
 from PyQt5.QtWidgets import QWidget, QApplication, QPushButton, QGridLayout, QLineEdit, QMainWindow, QScrollArea, QTextEdit, QListWidget, QDockWidget
 from PyQt5.QtGui import QIcon, QWindow, QPageLayout, QActionEvent
 from PyQt5.QtCore import Qt, pyqtSlot
@@ -75,15 +81,13 @@ class WindowManager(QWidget):
         self.winManagerLayout.addWidget(self.availableApps, 1, 0)
         self.appSearchBox.textChanged.connect(self.updateAppList)
         self.setLayout(self.winManagerLayout)
-        print("Install Location: " + self.apps[10].InstallLocation)
-        print("check " + os.path.dirname(self.apps[2].InstalledProductName))
         self.show()
 
     def updateAppList(self):
         appName = self.appSearchBox.text()
         self.availableApps.clear()
-        availableApps = ["none" for i in range(len(self.apps))]
-        if len(appName) == 0:
+        availableApps = [self.apps[i] for i in range(len(self.apps))]
+        '''if len(appName) == 0:
             for i in range(len(availableApps)):
                 availableApps[i] = self.apps[i].InstalledProductName
         else:
@@ -98,7 +102,7 @@ class WindowManager(QWidget):
                         break
                 if matches:
                     availableApps.append(self.apps[j].InstalledProductName)
-                    #array_iter += 1
+                    #array_iter += 1'''
         self.availableApps.addItems(availableApps)
 
 
@@ -197,6 +201,18 @@ class WindowFinder:
 
 
 class AppFinder:
+    def __init__(self):
+        print("Getting Apps")
+        self.shortcut_folder = 'C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs'
+
+    def get_installed_products(self):
+        shortcuts = []
+        for root, dirs, files in os.walk(self.shortcut_folder):
+            for file in files:
+                if file.endswith(".lnk"):
+                    shortcuts.append(os.path.join(root, file))
+        return shortcuts
+'''
     # defined at http://msdn.microsoft.com/en-us/library/aa370101(v=VS.85).aspx
     def __init__(self):
         self.UID_BUFFER_SIZE = 39
@@ -297,10 +313,11 @@ class AppFinder:
             return False
         else:
             return True
-
+        '''
 
 
 if __name__ == '__main__':
+    #os.startfile('C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\Word 2016.lnk')
     app = QApplication(sys.argv)
     ex = ProductivityApp()
     sys.exit(app.exec_())
