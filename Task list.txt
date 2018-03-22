@@ -1,0 +1,7 @@
+Setup a loop to grab .lnk files in folder.
+Be able to open .lnk files from window.
+setup functionality for task bar.
+get application to open inside window.
+***Stretch goals***
+set up multiple tabs for applications.
+allow user to set preferences.
