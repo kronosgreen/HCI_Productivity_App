@@ -108,8 +108,8 @@ class WindowManager(QWidget):
     def run_app(self, item):
         #do something here
         print("Run App: " + item)
-        self.appFinder.run_app(item)
-        self.set_to_window()
+       # self.appFinder.run_app(item)
+        #self.set_to_window()
 
     def set_to_window(self):
         print("Setting to this Window")
@@ -225,11 +225,17 @@ class AppFinder:
         self.shortcuts = shortcuts
         self.shortcut_names = shortcut_names
 
-    def get_shortcut_names(self):
-        return self.shortcut_names
-
+    #This is where the shortcut will be executed
     def run_app(self, name):
         print("running app " + name)
+        app_index = 0
+        for i in range(len(self.shortcut_names)):
+            if self.shortcut_names[i] == name:
+                app_index = i
+                break
+        os.startfile(self.shortcuts[app_index])
+
+
 '''
     # defined at http://msdn.microsoft.com/en-us/library/aa370101(v=VS.85).aspx
     def __init__(self):
