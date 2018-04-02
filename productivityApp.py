@@ -22,9 +22,9 @@ from ctypes.wintypes import DWORD
 from itertools import count
 import sys
 
-from PyQt5.QtWidgets import QWidget, QApplication, QPushButton, QGridLayout, QLineEdit, QMainWindow, QScrollArea, QTextEdit, QListWidget, QDockWidget
+from PyQt5.QtWidgets import QWidget, QApplication, QPushButton, QGridLayout, QLineEdit, QMainWindow, QScrollArea, QTextEdit, QListWidget, QListWidgetItem, QDockWidget
 from PyQt5.QtGui import QIcon, QWindow, QPageLayout, QActionEvent
-from PyQt5.QtCore import Qt, pyqtSlot
+from PyQt5.QtCore import Qt, pyqtSlot, QObject
 import numpy as np
 
 class ProductivityApp(QMainWindow):
@@ -51,7 +51,7 @@ class ProductivityApp(QMainWindow):
         mainMenu.addMenu('&Help')
         self.setCentralWidget(self.windowManager)
         self.addDockWidget(Qt.RightDockWidgetArea, self.taskMenu)
-        self.show()
+        self.showFullScreen()
 
 class WindowManager(QWidget):
 
@@ -105,10 +105,10 @@ class WindowManager(QWidget):
                     #array_iter += 1'''
         self.availableApps.addItems(availableApps)
 
-    def run_app(self, item):
+    #@pyqtSlot(QListWidgetItem)
+    def run_app(self):
         #do something here
-        print("Run App: " + item)
-       # self.appFinder.run_app(item)
+        self.appFinder.run_app(self.availableApps.currentItem().text())
         #self.set_to_window()
 
     def set_to_window(self):
