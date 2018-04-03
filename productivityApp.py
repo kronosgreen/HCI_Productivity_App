@@ -39,6 +39,7 @@ class ProductivityApp(QMainWindow):
         self.windowManager = WindowManager(self)
         #self.testingApp = QWidget.createWindowContainer(QWindow.fromWinId(16144))
         #self.testingApp.setParent(self)
+        self.taskDock = QDockWidget()
         self.taskMenu = TaskMenu(self)
         self.initUI()
 
@@ -48,9 +49,13 @@ class ProductivityApp(QMainWindow):
         self.statusBar()
         mainMenu = self.menuBar()
         mainMenu.addMenu('&Options')
+
         mainMenu.addMenu('&Help')
+
         self.setCentralWidget(self.windowManager)
-        self.addDockWidget(Qt.RightDockWidgetArea, self.taskMenu)
+
+        self.addDockWidget(Qt.RightDockWidgetArea, self.taskDock)
+        self.taskDock.setWidget(self.taskMenu)
         self.showFullScreen()
 
 class WindowManager(QWidget):
@@ -75,10 +80,6 @@ class WindowManager(QWidget):
     def initUI(self):
         self.setWindowTitle(self.title)
         self.setGeometry(self.left, self.top, self.width, self.height)
-        # os.startfile("C:\\Program Files (x86)\\Microsoft Office\\root\\Office16\\WINWORD.EXE")
-        # scrollArea = QScrollArea()
-        # self.availableApps.setParent(scrollArea)
-        # self.availableApps.setReadOnly(True)
         self.winManagerLayout.addWidget(self.appSearchBox, 0, 0)
         self.winManagerLayout.addWidget(self.availableApps, 1, 0)
         self.appSearchBox.textChanged.connect(self.updateAppList)
@@ -105,9 +106,7 @@ class WindowManager(QWidget):
                     #array_iter += 1'''
         self.availableApps.addItems(availableApps)
 
-    #@pyqtSlot(QListWidgetItem)
     def run_app(self):
-        #do something here
         self.appFinder.run_app(self.availableApps.currentItem().text())
         #self.set_to_window()
 
@@ -121,15 +120,15 @@ class WindowManager(QWidget):
         self.appWidget = QWidget.createWindowContainer(self.appWindow)
 
 
-class TaskMenu(QDockWidget):
+class TaskMenu(QWidget):
 
     def __init__(self, parent=None):
         super().__init__(parent)
         self.title = 'Task Menu Prototype'
-        self.top = 10
-        self.left = 10
-        self.height = 500
-        self.width = 800
+        #self.top = 10
+        #self.left = 10
+        #self.height = 500
+        #self.width = 800
         self.totalTasksCompleted = 0
         self.tasksCompleted = 0
         self.taskList = []
@@ -140,7 +139,7 @@ class TaskMenu(QDockWidget):
 
     def initUI(self):
         self.setWindowTitle(self.title)
-        self.setGeometry(self.left, self.top, self.width, self.height)
+        #self.setGeometry(self.left, self.top, self.width, self.height)
         self.setStyleSheet("background-color:cyan")
         buttonLayout = QGridLayout()
         self.addTaskButton = QPushButton(self)
