@@ -30,7 +30,7 @@ class TaskMenu(QWidget):
         buttonLayout = QGridLayout()
         self.addTaskButton = QPushButton(self)
         self.addTaskButton.setText("Add Task")
-        self.addTaskButton.clicked.connect(self.addTask)
+        self.addTaskButton.clicked.connect(self.add_task)
         buttonLayout.addWidget(self.addTaskButton, 0, 0)
         self.removeTaskButton = QPushButton(self)
         self.removeTaskButton.setText("Remove Last Task")
@@ -48,19 +48,19 @@ class TaskMenu(QWidget):
         self.show()
 
     @pyqtSlot()
-    def addTask(self):
+    def add_task(self):
         text = self.textBox.text()
         if len(text) > 0:
             new_button = QPushButton(self)
             new_button.setFlat(True)
             new_button.setText(text)
-            new_button.clicked.connect(self.completeTask)
+            new_button.clicked.connect(self.complete_task)
             self.taskLayout.addWidget(new_button, self.taskIndex, 0)
             self.taskIndex += 1
             print("Adding Task : " + text)
 
     @pyqtSlot(QPushButton)
-    def completeTask(self, button):
+    def complete_task(self, button):
         button.setText('\u0336'.join(button.text()) + '\u0336')
         self.totalTasksCompleted += 1
         self.tasksCompleted += 1

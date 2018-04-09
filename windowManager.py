@@ -23,10 +23,6 @@ class WindowManager(QWidget):
     def __init__(self, parent):
         super().__init__(parent)
         self.title = 'Window Manager Prototype'
-        self.top = 10
-        self.left = 10
-        self.height = 500
-        self.width = 800
         self.appFinder = ap.AppFinder()
         self.apps = self.appFinder.shortcut_names
         self.appSearchBox = QLineEdit(self)
@@ -38,7 +34,6 @@ class WindowManager(QWidget):
 
     def initUI(self):
         self.setWindowTitle(self.title)
-        self.setGeometry(self.left, self.top, self.width, self.height)
         self.winManagerLayout.addWidget(self.appSearchBox, 0, 0)
         self.winManagerLayout.addWidget(self.availableApps, 1, 0)
         self.appSearchBox.textChanged.connect(self.updateAppList)

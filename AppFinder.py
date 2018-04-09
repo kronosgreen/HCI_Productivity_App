@@ -34,12 +34,7 @@ class AppFinder:
     #called from windowmanager after double click
     def run_app(self, name):
         print("running app " + name)
-        app_index = 0
-        for i in range(len(self.shortcut_names)):
-            if self.shortcut_names[i] == name:
-                app_index = i
-                break
-        os.startfile(self.shortcuts[app_index])
+        os.startfile(self.shortcut_folder + "\\" + name + ".lnk")
         handle = self.get_window_handle()
         return handle
 
