@@ -10,3 +10,4 @@ allow user to set preferences.
 
 ***notes for later***
 trying to connect doubleclicked signal to the function
+The first line under the RUNAPP definition is where you can grab the text of the file that you are going to run.
