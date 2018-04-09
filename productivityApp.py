@@ -8,24 +8,13 @@
 #
 #
 
-import os
-import ctypes
-import win32api
-import win32gui
-import win32process
-import win32com.client
-
-import re
-from collections import namedtuple
-from ctypes import byref, create_unicode_buffer, windll
-from ctypes.wintypes import DWORD
-from itertools import count
 import sys
 
-from PyQt5.QtWidgets import QWidget, QApplication, QPushButton, QGridLayout, QLineEdit, QMainWindow, QScrollArea, QTextEdit, QListWidget, QListWidgetItem, QDockWidget, QLayout
-from PyQt5.QtGui import QIcon, QWindow, QPageLayout, QActionEvent
-from PyQt5.QtCore import Qt, pyqtSlot, QObject
-import numpy as np
+from PyQt5.QtWidgets import QWidget, QApplication,QMainWindow, QDockWidget, QAction
+from PyQt5.QtCore import Qt
+
+import taskMenu as tm
+import windowManager as wm
 
 class ProductivityApp(QMainWindow):
     
@@ -36,163 +25,41 @@ class ProductivityApp(QMainWindow):
         self.left = 10
         self.height = 500
         self.width = 800
-        self.windowManager = WindowManager(self)
+        self.windowManager = wm.WindowManager(self)
         #self.testingApp = QWidget.createWindowContainer(QWindow.fromWinId(16144))
         #self.testingApp.setParent(self)
         self.taskDock = QDockWidget()
-        self.taskMenu = TaskMenu(self)
+        self.taskMenu = tm.TaskMenu(self)
         self.initUI()
 
     def initUI(self):
         self.setWindowTitle(self.title)
         self.setGeometry(self.left, self.top, self.width, self.height)
-        self.statusBar()
-        mainMenu = self.menuBar()
-        mainMenu.addMenu('&Options')
-        mainMenu.addMenu('&Help')
-
         self.setCentralWidget(self.windowManager)
-
         self.addDockWidget(Qt.RightDockWidgetArea, self.taskDock)
         self.taskDock.setAllowedAreas(Qt.RightDockWidgetArea)
         self.taskDock.setFeatures(QDockWidget.NoDockWidgetFeatures)
         self.taskDock.setWidget(self.taskMenu)
+        self.init_menu_bar()
         self.showFullScreen()
 
-class WindowManager(QWidget):
+    def init_menu_bar(self):
+        self.statusBar()
 
-    def __init__(self, parent):
-        super().__init__(parent)
-        self.title = 'Window Manager Prototype'
-        self.top = 10
-        self.left = 10
-        self.height = 500
-        self.width = 800
-        self.winFinder = WindowFinder()
-        self.appFinder = AppFinder()
-        self.apps = self.appFinder.shortcut_names
-        self.appSearchBox = QLineEdit(self)
-        self.availableApps = QListWidget(self)
-        self.availableApps.itemDoubleClicked.connect(self.run_app)
-        self.updateAppList()
-        self.winManagerLayout = QGridLayout()
-        self.initUI()
+        main_menu = self.menuBar()
+        main_menu.addMenu('&Options')
+        main_menu.addMenu('&Help')
 
-    def initUI(self):
-        self.setWindowTitle(self.title)
-        self.setGeometry(self.left, self.top, self.width, self.height)
-        self.winManagerLayout.addWidget(self.appSearchBox, 0, 0)
-        self.winManagerLayout.addWidget(self.availableApps, 1, 0)
-        self.appSearchBox.textChanged.connect(self.updateAppList)
-        self.setLayout(self.winManagerLayout)
-        self.show()
+        quit_action = QAction("&Quit Application", self)
+        quit_action.setShortcut("Ctrl+Q")
+        quit_action.triggered.connect(self.close_app)
 
-    def updateAppList(self):
-        app_name = self.appSearchBox.text()
-        self.availableApps.clear()
-        if len(app_name) == 0:
-            availableApps = self.apps
-        else:
-            #availableApps = np.empty(len(self.apps), dtype='s128')
-            #array_iter = 0
-            availableApps = []
-            for j in range(len(self.apps)):
-                matches = True
-                for i in range(len(app_name)):
-                    if self.apps[j].upper()[i] != app_name.upper()[i]:
-                        matches = False
-                        break
-                if matches:
-                    availableApps.append(self.apps[j])
-                    #array_iter += 1'''
-        self.availableApps.addItems(availableApps)
+        main_menu.addAction(quit_action)
 
-    def run_app(self):
-        self.appFinder.run_app(self.availableApps.currentItem().text())
-        #self.set_to_window()
+    def close_app(self):
+        sys.exit()
 
-    def set_to_window(self):
-        print("Setting to this Window")
-
-    def add_window(self, windowId):
-
-        self.appWindow = QWindow.fromWinId(windowId)
-        self.appWindow.setFlag(Qt.FramelessWindowHint, True)
-        self.appWidget = QWidget.createWindowContainer(self.appWindow)
-
-
-class TaskMenu(QWidget):
-
-    def __init__(self, parent=None):
-        super().__init__(parent)
-        self.title = 'Task Menu Prototype'
-        #self.top = 10
-        #self.left = 10
-        #self.height = 500
-        #self.width = 800
-        self.totalTasksCompleted = 0
-        self.tasksCompleted = 0
-        self.taskList = []
-        self.taskIndex = 2
-        self.textBox = QLineEdit(self)
-        self.taskLayout = QGridLayout()
-        self.initUI()
-
-    def initUI(self):
-        self.setWindowTitle(self.title)
-        #self.setGeometry(self.left, self.top, self.width, self.height)
-        self.setStyleSheet("background-color:cyan")
-        buttonLayout = QGridLayout()
-        self.addTaskButton = QPushButton(self)
-        self.addTaskButton.setText("Add Task")
-        self.addTaskButton.clicked.connect(self.addTask)
-        buttonLayout.addWidget(self.addTaskButton, 0, 0)
-        self.removeTaskButton = QPushButton(self)
-        self.removeTaskButton.setText("Remove Last Task")
-        self.removeTaskButton.clicked.connect(self.removeLastTask)
-        buttonLayout.addWidget(self.removeTaskButton, 0,1)
-        self.clearTasksButton = QPushButton(self)
-        self.clearTasksButton.setText("Clear Tasks")
-        self.clearTasksButton.clicked.connect(self.clearTasks)
-        buttonLayout.addWidget(self.clearTasksButton, 0, 2)
-        buttonLayout.setSizeConstraint(QLayout.SetMinimumSize)
-        self.taskLayout.addLayout(buttonLayout, 0, 0)
-        self.taskLayout.addWidget(self.textBox, 1, 0)
-        self.taskLayout.setAlignment(Qt.AlignTop)
-        self.setLayout(self.taskLayout)
-        self.show()
-
-    @pyqtSlot()
-    def addTask(self):
-        text = self.textBox.text()
-        if len(text) > 0:
-            newButton = QPushButton(self)
-            newButton.setFlat(True)
-            newButton.setText(text)
-            #newButton.clicked.connect(self.completeTask)
-            self.taskLayout.addWidget(newButton, self.taskIndex, 0)
-            self.taskIndex += 1
-            print("Adding Task : " + text)
-
-    @pyqtSlot(QPushButton)
-    def completeTask(self, button):
-        button.setText('\u0336'.join(button.text()) + '\u0336')
-        self.totalTasksCompleted += 1
-        self.tasksCompleted += 1
-        print("completed task: ")
-
-    def removeLastTask(self):
-        if self.taskLayout.count() > 2:
-            self.taskIndex -= 1
-            self.taskLayout.itemAt(self.taskLayout.count()-1).widget().deleteLater()
-
-    def clearTasks(self):
-        self.taskIndex = 2
-        if self.taskLayout.count() > 2:
-            for i in range(self.taskLayout.count()-1, 1, -1):
-                self.taskLayout.itemAt(i).widget().deleteLater()
-
-class WindowFinder:
+'''class WindowFinder:
 
     """Class to find and make focus on a particular Native OS dialog/Window """
     def __init__(self):
@@ -227,9 +94,6 @@ class AppFinder:
     def __init__(self):
         print("Getting Apps")
         self.shortcut_folder = 'C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs'
-        self.PRODUCT_PROPERTIES = [u'URL',
-                                   u'ProductName'
-                                   ]
         self.shortcuts = []
         self.shortcut_names = []
         self.get_shortcuts()
@@ -253,112 +117,7 @@ class AppFinder:
             if self.shortcut_names[i] == name:
                 app_index = i
                 break
-        os.startfile(self.shortcuts[app_index])
-
-
-'''
-    # defined at http://msdn.microsoft.com/en-us/library/aa370101(v=VS.85).aspx
-    def __init__(self):
-        self.UID_BUFFER_SIZE = 39
-        self.PROPERTY_BUFFER_SIZE = 256
-        self.ERROR_MORE_DATA = 234
-        self.ERROR_INVALID_PARAMETER = 87
-        self.ERROR_SUCCESS = 0
-        self.ERROR_NO_MORE_ITEMS = 259
-        self.ERROR_UNKNOWN_PRODUCT = 1605
-        # diff propoerties of a product, not all products have all properties
-        self.PRODUCT_PROPERTIES = [u'Language',
-                          u'ProductName',
-                          u'PackageCode',
-                          u'Transforms',
-                          u'AssignmentType',
-                          u'PackageName',
-                          u'InstalledProductName',
-                          u'VersionString',
-                          u'RegCompany',
-                          u'RegOwner',
-                          u'ProductID',
-                          u'ProductIcon',
-                          u'InstallLocation',
-                          u'InstallSource',
-                          u'InstallDate',
-                          u'Publisher',
-                          u'LocalPackage',
-                          u'HelpLink',
-                          u'HelpTelephone',
-                          u'URLInfoAbout',
-                          u'URLUpdateInfo', ]
-
-        # class to be used for python users :)
-        self.Product = namedtuple('Product', self.PRODUCT_PROPERTIES)
-
-
-    def get_property_for_product(self, product, property, buf_size=256):
-        """Retruns the value of a fiven property from a product."""
-        property_buffer = create_unicode_buffer(buf_size)
-        size = DWORD(buf_size)
-        result = windll.msi.MsiGetProductInfoW(product, property, property_buffer,
-                                               byref(size))
-        if result == self.ERROR_MORE_DATA:
-            return self.get_property_for_product(product, property,
-                                            2 * buf_size)
-        elif result == self.ERROR_SUCCESS:
-            return property_buffer.value
-        else:
-            return None
-
-
-    def populate_product(self, uid):
-        """Return a Product with the different present data."""
-        properties = []
-        for property in self.PRODUCT_PROPERTIES:
-            properties.append(self.get_property_for_product(uid, property))
-        return self.Product(*properties)
-
-
-    def get_installed_products_uids(self):
-        """Returns a list with all the different uid of the installed apps."""
-        # enum will return an error code according to the result of the app
-        products = []
-        for i in count(0):
-            uid_buffer = create_unicode_buffer(self.UID_BUFFER_SIZE)
-            result = windll.msi.MsiEnumProductsW(i, uid_buffer)
-            if result == self.ERROR_NO_MORE_ITEMS:
-                # done interating over the collection
-                break
-            products.append(uid_buffer.value)
-        return products
-
-
-    def get_installed_products(self):
-        """Returns a collection of products that are installed in the system."""
-        products = []
-        for puid in self.get_installed_products_uids():
-            products.append(self.populate_product(puid))
-        return products
-
-
-    def is_product_installed_uid(self, uid):
-        """Return if a product with the given id is installed.
-
-        uid Most be a unicode object with the uid of the product using
-        the following format {uid}
-        """
-        # we try to get the VersisonString for the uid, if we get an error it means
-        # that the product is not installed in the system.
-        buf_size = 256
-        uid_buffer = create_unicode_buffer(uid)
-        property = u'VersionString'
-        property_buffer = create_unicode_buffer(buf_size)
-        size = DWORD(buf_size)
-        result = windll.msi.MsiGetProductInfoW(uid_buffer, property, property_buffer,
-                                               byref(size))
-        if result == self.ERROR_UNKNOWN_PRODUCT:
-            return False
-        else:
-            return True
-        '''
-
+        os.startfile(self.shortcuts[app_index])'''
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
