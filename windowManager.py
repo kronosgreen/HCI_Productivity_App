@@ -8,26 +8,16 @@
 #
 #
 
-import os
-import ctypes
-import win32api
-import win32gui
-import win32process
-import win32com.client
-
-import re
-from collections import namedtuple
-from ctypes import byref, create_unicode_buffer, windll
-from ctypes.wintypes import DWORD
-from itertools import count
-import sys
 
 from PyQt5.QtWidgets import QWidget, QApplication, QPushButton, QGridLayout, QLineEdit, \
     QMainWindow, QListWidget, QDockWidget, \
     QLayout, QAction
 from PyQt5.QtGui import QIcon, QWindow, QPageLayout, QActionEvent
 from PyQt5.QtCore import Qt, pyqtSlot, QObject
-import numpy as np
+
+import AppFinder as ap
+
+
 class WindowManager(QWidget):
 
     def __init__(self, parent):
@@ -37,8 +27,7 @@ class WindowManager(QWidget):
         self.left = 10
         self.height = 500
         self.width = 800
-        self.winFinder = WindowFinder()
-        self.appFinder = AppFinder()
+        self.appFinder = ap.AppFinder()
         self.apps = self.appFinder.shortcut_names
         self.appSearchBox = QLineEdit(self)
         self.availableApps = QListWidget(self)
