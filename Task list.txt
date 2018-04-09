@@ -1,8 +1,16 @@
-Setup a loop to grab .lnk files in folder.
 ***Folder url for .lnk files is: C:\ProgramData\Microsoft\Windows\Start Menu\Programs***
-Be able to open .lnk files from window.
+get window handle of opened window (from the list that we have) and create widget from it
+  -use qwidget.createcontainerfromwindow(QWindow.fromwinid(#####)) or something of the sort
+  -set framelesswindowhint to be able to get it into our application
+  -when setting the parent, replace the list of applications and search bar with the opened window
+  
 setup functionality for task bar.
-get application to open inside window.
+  -be able to mark completed tasks
+  -let users undo completion in case of mistake
+  -allow user to clear all tasks
+ 
+
+
 ***Stretch goals***
 set up multiple tabs for applications.
 allow user to set preferences.
@@ -10,3 +18,4 @@ allow user to set preferences.
 
 ***notes for later***
 trying to connect doubleclicked signal to the function
+The first line under the RUNAPP definition is where you can grab the text of the file that you are going to run.
