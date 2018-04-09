@@ -21,10 +21,6 @@ class ProductivityApp(QMainWindow):
     def __init__(self):
         super().__init__()
         self.title = 'Productivity App Prototype'
-        self.top = 10
-        self.left = 10
-        self.height = 500
-        self.width = 800
         self.windowManager = wm.WindowManager(self)
         self.taskDock = QDockWidget()
         self.taskMenu = tm.TaskMenu(self)
@@ -32,7 +28,6 @@ class ProductivityApp(QMainWindow):
 
     def initUI(self):
         self.setWindowTitle(self.title)
-        self.setGeometry(self.left, self.top, self.width, self.height)
         self.setCentralWidget(self.windowManager)
         self.addDockWidget(Qt.RightDockWidgetArea, self.taskDock)
         self.taskDock.setAllowedAreas(Qt.RightDockWidgetArea)
@@ -45,17 +40,24 @@ class ProductivityApp(QMainWindow):
         self.statusBar()
 
         main_menu = self.menuBar()
-        main_menu.addMenu('&Options')
-        main_menu.addMenu('&Help')
+        options = main_menu.addMenu('&Options')
+        help = main_menu.addMenu('&Help')
+
+        settings_action = QAction("&Settings", self)
+        settings_action.triggered.connect(self.open_settings)
 
         quit_action = QAction("&Quit Application", self)
         quit_action.setShortcut("Ctrl+Q")
         quit_action.triggered.connect(self.close_app)
 
-        main_menu.addAction(quit_action)
+        options.addAction(quit_action)
 
     def close_app(self):
+        print("Closing App")
         sys.exit()
+
+    def open_settings(self):
+        print("Opening Settings")
 
 
 if __name__ == '__main__':

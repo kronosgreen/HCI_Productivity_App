@@ -10,6 +10,7 @@
 from PyQt5.QtWidgets import QWidget, QPushButton, QGridLayout, QLineEdit, QLayout
 from PyQt5.QtCore import Qt, pyqtSlot
 
+
 class TaskMenu(QWidget):
 
     def __init__(self, parent=None):
@@ -50,11 +51,11 @@ class TaskMenu(QWidget):
     def addTask(self):
         text = self.textBox.text()
         if len(text) > 0:
-            newButton = QPushButton(self)
-            newButton.setFlat(True)
-            newButton.setText(text)
-            #newButton.clicked.connect(self.completeTask)
-            self.taskLayout.addWidget(newButton, self.taskIndex, 0)
+            new_button = QPushButton(self)
+            new_button.setFlat(True)
+            new_button.setText(text)
+            new_button.clicked.connect(self.completeTask)
+            self.taskLayout.addWidget(new_button, self.taskIndex, 0)
             self.taskIndex += 1
             print("Adding Task : " + text)
 
@@ -63,7 +64,7 @@ class TaskMenu(QWidget):
         button.setText('\u0336'.join(button.text()) + '\u0336')
         self.totalTasksCompleted += 1
         self.tasksCompleted += 1
-        print("completed task: ")
+        print("completed task: " + button.text())
 
     def removeLastTask(self):
         if self.taskLayout.count() > 2:
@@ -75,3 +76,4 @@ class TaskMenu(QWidget):
         if self.taskLayout.count() > 2:
             for i in range(self.taskLayout.count()-1, 1, -1):
                 self.taskLayout.itemAt(i).widget().deleteLater()
+
