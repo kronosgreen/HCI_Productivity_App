@@ -50,6 +50,7 @@ class ProductivityApp(QMainWindow):
         quit_action.setShortcut("Ctrl+Q")
         quit_action.triggered.connect(self.close_app)
 
+        options.addAction(settings_action)
         options.addAction(quit_action)
 
     def close_app(self):
