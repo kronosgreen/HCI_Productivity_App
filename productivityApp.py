@@ -22,7 +22,7 @@ from ctypes.wintypes import DWORD
 from itertools import count
 import sys
 
-from PyQt5.QtWidgets import QWidget, QApplication, QPushButton, QGridLayout, QLineEdit, QMainWindow, QScrollArea, QTextEdit, QListWidget, QListWidgetItem, QDockWidget
+from PyQt5.QtWidgets import QWidget, QApplication, QPushButton, QGridLayout, QLineEdit, QMainWindow, QScrollArea, QTextEdit, QListWidget, QListWidgetItem, QDockWidget, QLayout
 from PyQt5.QtGui import QIcon, QWindow, QPageLayout, QActionEvent
 from PyQt5.QtCore import Qt, pyqtSlot, QObject
 import numpy as np
@@ -49,12 +49,13 @@ class ProductivityApp(QMainWindow):
         self.statusBar()
         mainMenu = self.menuBar()
         mainMenu.addMenu('&Options')
-
         mainMenu.addMenu('&Help')
 
         self.setCentralWidget(self.windowManager)
 
         self.addDockWidget(Qt.RightDockWidgetArea, self.taskDock)
+        self.taskDock.setAllowedAreas(Qt.RightDockWidgetArea)
+        self.taskDock.setFeatures(QDockWidget.NoDockWidgetFeatures)
         self.taskDock.setWidget(self.taskMenu)
         self.showFullScreen()
 
@@ -144,32 +145,52 @@ class TaskMenu(QWidget):
         buttonLayout = QGridLayout()
         self.addTaskButton = QPushButton(self)
         self.addTaskButton.setText("Add Task")
+        self.addTaskButton.clicked.connect(self.addTask)
         buttonLayout.addWidget(self.addTaskButton, 0, 0)
         self.removeTaskButton = QPushButton(self)
-        self.removeTaskButton.setText("Remove Task")
+        self.removeTaskButton.setText("Remove Last Task")
+        self.removeTaskButton.clicked.connect(self.removeLastTask)
         buttonLayout.addWidget(self.removeTaskButton, 0,1)
         self.clearTasksButton = QPushButton(self)
         self.clearTasksButton.setText("Clear Tasks")
+        self.clearTasksButton.clicked.connect(self.clearTasks)
         buttonLayout.addWidget(self.clearTasksButton, 0, 2)
+        buttonLayout.setSizeConstraint(QLayout.SetMinimumSize)
         self.taskLayout.addLayout(buttonLayout, 0, 0)
         self.taskLayout.addWidget(self.textBox, 1, 0)
+        self.taskLayout.setAlignment(Qt.AlignTop)
         self.setLayout(self.taskLayout)
         self.show()
 
     @pyqtSlot()
     def addTask(self):
         text = self.textBox.text()
-        newButton = QPushButton(self)
-        newButton.setText(text)
-        self.taskLayout.addWidget(newButton, self.taskIndex, 0)
-        self.taskIndex += 1
-        print("add")
+        if len(text) > 0:
+            newButton = QPushButton(self)
+            newButton.setFlat(True)
+            newButton.setText(text)
+            #newButton.clicked.connect(self.completeTask)
+            self.taskLayout.addWidget(newButton, self.taskIndex, 0)
+            self.taskIndex += 1
+            print("Adding Task : " + text)
 
-    def completeTask(self):
-        print("completed")
+    @pyqtSlot(QPushButton)
+    def completeTask(self, button):
+        button.setText('\u0336'.join(button.text()) + '\u0336')
+        self.totalTasksCompleted += 1
+        self.tasksCompleted += 1
+        print("completed task: ")
+
+    def removeLastTask(self):
+        if self.taskLayout.count() > 2:
+            self.taskIndex -= 1
+            self.taskLayout.itemAt(self.taskLayout.count()-1).widget().deleteLater()
 
     def clearTasks(self):
-        print("clear")
+        self.taskIndex = 2
+        if self.taskLayout.count() > 2:
+            for i in range(self.taskLayout.count()-1, 1, -1):
+                self.taskLayout.itemAt(i).widget().deleteLater()
 
 class WindowFinder:
 
