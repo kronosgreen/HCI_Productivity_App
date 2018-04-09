@@ -31,6 +31,7 @@ class AppFinder:
         self.shortcut_names = shortcut_names
 
     #This is where the shortcut will be executed
+    #called from windowmanager after double click
     def run_app(self, name):
         print("running app " + name)
         app_index = 0
@@ -39,3 +40,11 @@ class AppFinder:
                 app_index = i
                 break
         os.startfile(self.shortcuts[app_index])
+        handle = self.get_window_handle()
+        return handle
+
+    def get_window_handle(self):
+        #find application just opened
+        #get handle number from said application and return
+        hnd = 1111
+        return hnd

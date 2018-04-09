@@ -26,8 +26,6 @@ class ProductivityApp(QMainWindow):
         self.height = 500
         self.width = 800
         self.windowManager = wm.WindowManager(self)
-        #self.testingApp = QWidget.createWindowContainer(QWindow.fromWinId(16144))
-        #self.testingApp.setParent(self)
         self.taskDock = QDockWidget()
         self.taskMenu = tm.TaskMenu(self)
         self.initUI()

@@ -45,6 +45,7 @@ class WindowManager(QWidget):
         self.setLayout(self.winManagerLayout)
         self.show()
 
+    #search function
     def updateAppList(self):
         app_name = self.appSearchBox.text()
         self.availableApps.clear()
@@ -65,9 +66,11 @@ class WindowManager(QWidget):
                     #array_iter += 1'''
         self.availableApps.addItems(availableApps)
 
+    #sends name of the button clicked to the app finder class which runs the app
     def run_app(self):
-        self.appFinder.run_app(self.availableApps.currentItem().text())
+        whnd = self.appFinder.run_app(self.availableApps.currentItem().text())
         #self.set_to_window()
+        #create qwidget.containerfromwi wiwegdionwoj( fromm win
 
     def set_to_window(self):
         print("Setting to this Window")
