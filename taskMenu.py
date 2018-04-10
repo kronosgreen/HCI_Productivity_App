@@ -14,6 +14,7 @@ from PyQt5.QtCore import Qt, pyqtSlot
 class TaskMenu(QWidget):
 
     def __init__(self, parent=None):
+        print("@ tm : init")
         super().__init__(parent)
         self.parent = parent
         self.title = 'Task Menu Prototype'

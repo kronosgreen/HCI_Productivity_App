@@ -19,6 +19,7 @@ import windowManager as wm
 class AppWindow(QWidget):
     
     def __init__(self, parent, tab_index):
+        print("@ aw : init")
         super().__init__()
         self.parent = parent
         self.title = 'Productivity App Prototype'

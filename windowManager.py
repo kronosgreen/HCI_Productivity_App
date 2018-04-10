@@ -21,6 +21,7 @@ import AppFinder as ap
 class WindowManager(QWidget):
 
     def __init__(self, parent):
+        print("@ wm : init")
         super().__init__(parent)
         self.parent = parent
         self.title = 'Window Manager Prototype'
