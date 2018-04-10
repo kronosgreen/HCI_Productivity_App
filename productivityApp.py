@@ -10,58 +10,36 @@
 
 import sys
 
-from PyQt5.QtWidgets import QWidget, QApplication,QMainWindow, QDockWidget, QAction
-from PyQt5.QtCore import Qt
+from PyQt5.QtWidgets import QWidget, QGridLayout
 
 import taskMenu as tm
 import windowManager as wm
 
-class ProductivityApp(QMainWindow):
+
+class AppWindow(QWidget):
     
-    def __init__(self):
+    def __init__(self, parent, tab_index):
         super().__init__()
+        self.parent = parent
         self.title = 'Productivity App Prototype'
+        self.tab_index = tab_index
         self.windowManager = wm.WindowManager(self)
-        self.taskDock = QDockWidget()
         self.taskMenu = tm.TaskMenu(self)
-        self.initUI()
+        self.init_ui()
 
-    def initUI(self):
+    def init_ui(self):
         self.setWindowTitle(self.title)
-        self.setCentralWidget(self.windowManager)
-        self.addDockWidget(Qt.RightDockWidgetArea, self.taskDock)
-        self.taskDock.setAllowedAreas(Qt.RightDockWidgetArea)
-        self.taskDock.setFeatures(QDockWidget.NoDockWidgetFeatures)
-        self.taskDock.setWidget(self.taskMenu)
-        self.init_menu_bar()
-        self.showFullScreen()
+        layout = QGridLayout()
 
-    def init_menu_bar(self):
-        self.statusBar()
+        layout.addWidget(self.windowManager, 0, 0)
+        self.taskMenu.setMaximumWidth(500)
+        layout.addWidget(self.taskMenu, 0, 1)
 
-        main_menu = self.menuBar()
-        options = main_menu.addMenu('&Options')
-        help = main_menu.addMenu('&Help')
+        self.setLayout(layout)
 
-        settings_action = QAction("&Settings", self)
-        settings_action.triggered.connect(self.open_settings)
+    def set_intensity(self):
+        print("@ aw : set_intensity")
 
-        quit_action = QAction("&Quit Application", self)
-        quit_action.setShortcut("Ctrl+Q")
-        quit_action.triggered.connect(self.close_app)
-
-        options.addAction(settings_action)
-        options.addAction(quit_action)
-
-    def close_app(self):
-        print("Closing App")
-        sys.exit()
-
-    def open_settings(self):
-        print("Opening Settings")
-
-
-if __name__ == '__main__':
-    app = QApplication(sys.argv)
-    ex = ProductivityApp()
-    sys.exit(app.exec_())
+    def change_tab_name(self, tab_name):
+        print("@ aw : change_tab_name")
+        self.parent.change_tab_name(self.tab_index, tab_name)

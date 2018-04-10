@@ -22,34 +22,33 @@ class WindowManager(QWidget):
 
     def __init__(self, parent):
         super().__init__(parent)
+        self.parent = parent
         self.title = 'Window Manager Prototype'
         self.appFinder = ap.AppFinder()
         self.apps = self.appFinder.shortcut_names
         self.appSearchBox = QLineEdit(self)
         self.availableApps = QListWidget(self)
         self.availableApps.itemDoubleClicked.connect(self.run_app)
-        self.updateAppList()
+        self.update_app_list()
         self.winManagerLayout = QGridLayout()
-        self.initUI()
+        self.init_ui()
 
-    def initUI(self):
+    def init_ui(self):
         self.setWindowTitle(self.title)
         self.winManagerLayout.addWidget(self.appSearchBox, 0, 0)
         self.winManagerLayout.addWidget(self.availableApps, 1, 0)
-        self.appSearchBox.textChanged.connect(self.updateAppList)
+        self.appSearchBox.textChanged.connect(self.update_app_list)
         self.setLayout(self.winManagerLayout)
         self.show()
 
-    #search function
-    def updateAppList(self):
+    # search function
+    def update_app_list(self):
         app_name = self.appSearchBox.text()
         self.availableApps.clear()
         if len(app_name) == 0:
-            availableApps = self.apps
+            available_apps = self.apps
         else:
-            #availableApps = np.empty(len(self.apps), dtype='s128')
-            #array_iter = 0
-            availableApps = []
+            available_apps = []
             for j in range(len(self.apps)):
                 matches = True
                 for i in range(len(app_name)):
@@ -57,21 +56,19 @@ class WindowManager(QWidget):
                         matches = False
                         break
                 if matches:
-                    availableApps.append(self.apps[j])
-                    #array_iter += 1'''
-        self.availableApps.addItems(availableApps)
+                    available_apps.append(self.apps[j])
+        self.availableApps.addItems(available_apps)
 
-    #sends name of the button clicked to the app finder class which runs the app
+    # sends name of the button clicked to the app finder class which runs the app
     def run_app(self):
-        whnd = self.appFinder.run_app(self.availableApps.currentItem().text())
-        #self.set_to_window()
-        #create qwidget.containerfromwi wiwegdionwoj( fromm win
+        print("@ wm : run_app")
+        app_name = self.availableApps.currentItem().text()
+        whnd = self.appFinder.run_app(app_name)
+        self.parent.change_tab_name(app_name)
+        # self.set_to_window(whnd)
 
-    def set_to_window(self):
-        print("Setting to this Window")
-
-    def add_window(self, windowId):
-
-        self.appWindow = QWindow.fromWinId(windowId)
-        self.appWindow.setFlag(Qt.FramelessWindowHint, True)
-        self.appWidget = QWidget.createWindowContainer(self.appWindow)
+    def set_to_window(self, window_id):
+        print("@ wm : Setting to this Window")
+        app_window = QWindow.fromWinId(window_id)
+        self.app_window.setFlag(Qt.FramelessWindowHint, True)
+        app_widget = QWidget.createWindowContainer(app_window)

@@ -13,7 +13,7 @@ import os
 
 class AppFinder:
     def __init__(self):
-        print("Getting Apps")
+        print("@ af : init")
         self.shortcut_folder = 'C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs'
         self.shortcuts = []
         self.shortcut_names = []
@@ -30,10 +30,10 @@ class AppFinder:
         self.shortcuts = shortcuts
         self.shortcut_names = shortcut_names
 
-    #This is where the shortcut will be executed
-    #called from windowmanager after double click
+    # This is where the shortcut will be executed
+    # called from window manager after double click
     def run_app(self, name):
-        print("running app " + name)
+        print("@ af : run_app : " + name)
         for i in range(len(self.shortcut_names)):
             if name == self.shortcut_names[i]:
                 os.startfile(self.shortcuts[i])
@@ -42,7 +42,7 @@ class AppFinder:
         return handle
 
     def get_window_handle(self):
-        #find application just opened
-        #get handle number from said application and return
+        # find application just opened
+        # get handle number from said application and return
         hnd = 1111
         return hnd
