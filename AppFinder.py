@@ -7,7 +7,8 @@
 #
 #
 #
-
+import win32gui
+import time
 import os
 
 
@@ -17,8 +18,11 @@ class AppFinder:
         self.shortcut_folder = 'C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs'
         self.shortcuts = []
         self.shortcut_names = []
+        self.top_windows = []
+        self.window_handle = []
         self.get_shortcuts()
-
+        
+        
     def get_shortcuts(self):
         shortcuts = []
         shortcut_names = []
@@ -33,16 +37,12 @@ class AppFinder:
     # This is where the shortcut will be executed
     # called from window manager after double click
     def run_app(self, name):
+        
         print("@ af : run_app : " + name)
         for i in range(len(self.shortcut_names)):
             if name == self.shortcut_names[i]:
                 os.startfile(self.shortcuts[i])
+                time.sleep(.1)
                 break
-        handle = self.get_window_handle()
-        return handle
-
-    def get_window_handle(self):
-        # find application just opened
-        # get handle number from said application and return
-        hnd = 1111
-        return hnd
+        handle = win32gui.GetForegroundWindow()
+        return handle        
