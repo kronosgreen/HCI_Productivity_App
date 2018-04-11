@@ -22,8 +22,9 @@ class AppWindow(QWidget):
         print("@ aw : init")
         super().__init__()
         self.parent = parent
-        self.title = 'Productivity App Prototype'
+        self.title = 'Productivity App Window'
         self.tab_index = tab_index
+        self.intensity = 3
         self.windowManager = wm.WindowManager(self)
         self.taskMenu = tm.TaskMenu(self)
         self.init_ui()
@@ -38,9 +39,18 @@ class AppWindow(QWidget):
 
         self.setLayout(layout)
 
-    def set_intensity(self):
+    def set_intensity(self, intensity):
         print("@ aw : set_intensity")
+        self.intensity = intensity
+        if intensity == 1:
+            self.taskMenu.set_tasks_till_completion(3)
+        elif intensity == 2:
+            self.taskMenu.set_tasks_till_completion(5)
+        elif intensity == 3:
+            self.taskMenu.set_tasks_till_completion(7)
 
+    # called when an app is opened
     def change_tab_name(self, tab_name):
-        print("@ aw : change_tab_name")
+        print("@ aw : change_tab_name & window opened")
         self.parent.change_tab_name(self.tab_index, tab_name)
+        self.taskMenu.set_window_opened(True)

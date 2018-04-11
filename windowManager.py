@@ -25,6 +25,8 @@ class WindowManager(QWidget):
         super().__init__(parent)
         self.parent = parent
         self.title = 'Window Manager Prototype'
+        self.app_widget = None
+        self.app_window = None
         self.appFinder = ap.AppFinder()
         self.apps = self.appFinder.shortcut_names
         self.appSearchBox = QLineEdit(self)
@@ -66,10 +68,11 @@ class WindowManager(QWidget):
         app_name = self.availableApps.currentItem().text()
         whnd = self.appFinder.run_app(app_name)
         self.parent.change_tab_name(app_name)
-        # self.set_to_window(whnd)
+        self.set_to_window(whnd)
 
     def set_to_window(self, window_id):
-        print("@ wm : Setting to this Window")
-        app_window = QWindow.fromWinId(window_id)
+        print("@ wm : set_to_window : " + str(window_id))
+        self.app_window = QWindow.fromWinId(window_id)
         self.app_window.setFlag(Qt.FramelessWindowHint, True)
-        app_widget = QWidget.createWindowContainer(app_window)
+        self.app_widget = QWidget.createWindowContainer(self.app_window, self.parent)
+        self.app_widget.show()

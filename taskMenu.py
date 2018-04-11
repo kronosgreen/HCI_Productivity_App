@@ -17,9 +17,11 @@ class TaskMenu(QWidget):
         print("@ tm : init")
         super().__init__(parent)
         self.parent = parent
-        self.title = 'Task Menu Prototype'
-        self.totalTasksCompleted = 0
-        self.tasksCompleted = 0
+        self.title = 'Task Menu'
+        self.window_opened = False
+        self.tasks_to_completion = 0
+        self.total_tasks_completed = 0
+        self.tasks_completed = 0
         self.taskList = []
         self.taskIndex = 2
         self.textBox = QLineEdit(self)
@@ -51,23 +53,33 @@ class TaskMenu(QWidget):
 
     @pyqtSlot()
     def add_task(self):
+        # prevent repeat tasks, or empty tasks from being made into buttons
         print("@ tm : add_task")
         text = self.textBox.text()
-        if len(text) > 0:
-            new_button = QPushButton(self)
-            new_button.setFlat(True)
-            new_button.setText(text)
-            new_button.clicked.connect(lambda: self.complete_task(new_button))
-            self.taskLayout.addWidget(new_button, self.taskIndex, 0)
-            self.taskIndex += 1
+        if len(text) > 0 and self.window_opened:
+            if self.taskLayout.count() == 2:
+                new_button = QPushButton(self)
+                new_button.setFlat(True)
+                new_button.setText(text)
+                new_button.clicked.connect(lambda: self.complete_task(new_button))
+                self.taskLayout.addWidget(new_button, self.taskIndex, 0)
+                self.taskIndex += 1
+            else:
+                if text != self.taskLayout.itemAt(self.taskLayout.count()-1).widget().text():
+                    new_button = QPushButton(self)
+                    new_button.setFlat(True)
+                    new_button.setText(text)
+                    new_button.clicked.connect(lambda: self.complete_task(new_button))
+                    self.taskLayout.addWidget(new_button, self.taskIndex, 0)
+                    self.taskIndex += 1
 
     @pyqtSlot(QPushButton)
     def complete_task(self, button):
         print("@ tm : complete_task")
         if '\u0336' not in button.text():
             button.setText('\u0336'.join(button.text()) + '\u0336')
-            self.totalTasksCompleted += 1
-            self.tasksCompleted += 1
+            self.total_tasks_completed += 1
+            self.tasks_completed += 1
         else:
             print("Already completed Task")
 
@@ -84,3 +96,9 @@ class TaskMenu(QWidget):
             for i in range(self.taskLayout.count()-1, 1, -1):
                 self.taskLayout.itemAt(i).widget().deleteLater()
 
+    def set_tasks_till_completion(self, task_num):
+        print("@ set_tasks_till_completion")
+
+    def set_window_opened(self, opened):
+        print("@ set_window_opened")
+        self.window_opened = opened

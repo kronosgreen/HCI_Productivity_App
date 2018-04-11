@@ -22,6 +22,11 @@ class MasterLauncher(QMainWindow):
         self.tabs = QTabWidget()
         self.tab_count = 1
         self.tab_index = 0
+
+        self.high_intensity_tasks = 7
+        self.medium_intensity_tasks = 5
+        self.light_intensity_tasks = 3
+
         self.init_ui()
 
     def init_ui(self):
