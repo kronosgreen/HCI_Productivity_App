@@ -37,12 +37,15 @@ class AppFinder:
     # This is where the shortcut will be executed
     # called from window manager after double click
     def run_app(self, name):
-        
+        handle = []
         print("@ af : run_app : " + name)
         for i in range(len(self.shortcut_names)):
             if name == self.shortcut_names[i]:
+                handle.append(win32gui.GetForegroundWindow())
                 os.startfile(self.shortcuts[i])
                 time.sleep(.1)
                 break
-        handle = win32gui.GetForegroundWindow()
-        return handle        
+        handle.append(win32gui.GetForegroundWindow())
+        for i in handle:
+            print(i)
+        
