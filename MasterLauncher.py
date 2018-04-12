@@ -128,7 +128,7 @@ class TabTable(QWidget):
     def add_tabs(self, tabs):
         print("@ tab menu : add_tabs")
         layout = QGridLayout()
-        self.setMinimumSize(400, 400)
+        self.setMinimumSize(600, 600)
         for tab in range(len(tabs)):
             tab_button = QPushButton(self)
             tab_button.setText(tabs[tab])

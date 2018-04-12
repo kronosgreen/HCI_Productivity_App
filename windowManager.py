@@ -72,7 +72,7 @@ class WindowManager(QWidget):
         self.winManagerLayout.removeWidget(self.availableApps)
         self.availableApps.deleteLater()
         self.parent.change_tab_name(app_name)
-        self.set_to_window(whnd)
+        self.set_to_window(whnd[0])
 
     def set_to_window(self, window_id):
         print("@ wm : set_to_window : " + str(window_id))

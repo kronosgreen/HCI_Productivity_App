@@ -19,7 +19,7 @@ class TaskMenu(QWidget):
         self.parent = parent
         self.title = 'Task Menu'
         self.window_opened = False
-        self.tasks_to_completion = 10
+        self.tasks_to_completion = -1
         self.total_tasks_completed = 0
         self.tasks_completed = 0
         self.taskList = []
@@ -108,7 +108,7 @@ class TaskMenu(QWidget):
 
     def prompt_all_tasks_completed(self):
         print("@ prompt_all_tasks_completed")
-
+        self.parent.parent.switch_tab()
 
     def set_window_opened(self, opened):
         print("@ set_window_opened")

@@ -39,6 +39,11 @@ class AppWindow(QWidget):
 
         self.setLayout(layout)
 
+    def get_intensity(self):
+        print("@ aw : get_intensity")
+        intensity = 3
+        self.set_intensity(intensity)
+
     def set_intensity(self, intensity):
         print("@ aw : set_intensity")
         self.intensity = intensity
@@ -54,3 +59,4 @@ class AppWindow(QWidget):
         print("@ aw : change_tab_name & window opened")
         self.parent.change_tab_name(self.tab_index, tab_name)
         self.taskMenu.set_window_opened(True)
+        self.get_intensity()
