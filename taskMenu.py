@@ -7,7 +7,7 @@
 #
 #
 
-from PyQt5.QtWidgets import QWidget, QPushButton, QGridLayout, QLineEdit, QLayout
+from PyQt5.QtWidgets import QWidget, QPushButton, QGridLayout, QLineEdit, QLayout, QLabel
 from PyQt5.QtCore import Qt, pyqtSlot
 
 
@@ -19,18 +19,21 @@ class TaskMenu(QWidget):
         self.parent = parent
         self.title = 'Task Menu'
         self.window_opened = False
-        self.tasks_to_completion = 0
+        self.tasks_to_completion = 10
         self.total_tasks_completed = 0
         self.tasks_completed = 0
         self.taskList = []
-        self.taskIndex = 2
+        self.taskIndex = 3
         self.textBox = QLineEdit(self)
+        self.task_stats = QLabel()
         self.taskLayout = QGridLayout()
         self.init_ui()
 
     def init_ui(self):
         self.setWindowTitle(self.title)
         # self.setStyleSheet("background-color:cyan")
+        self.taskLayout.addWidget(self.task_stats, 0, 0)
+        self.task_stats.setText("Tasks Completed : " + str(self.tasks_completed))
         button_layout = QGridLayout()
         add_task_button = QPushButton(self)
         add_task_button.setText("Add Task")
@@ -45,8 +48,8 @@ class TaskMenu(QWidget):
         clear_tasks_button.clicked.connect(self.clear_tasks)
         button_layout.addWidget(clear_tasks_button, 0, 2)
         button_layout.setSizeConstraint(QLayout.SetMinimumSize)
-        self.taskLayout.addLayout(button_layout, 0, 0)
-        self.taskLayout.addWidget(self.textBox, 1, 0)
+        self.taskLayout.addLayout(button_layout, 1, 0)
+        self.taskLayout.addWidget(self.textBox, 2, 0)
         self.taskLayout.setAlignment(Qt.AlignTop)
         self.setLayout(self.taskLayout)
         self.show()
@@ -57,7 +60,7 @@ class TaskMenu(QWidget):
         print("@ tm : add_task")
         text = self.textBox.text()
         if len(text) > 0 and self.window_opened:
-            if self.taskLayout.count() == 2:
+            if self.taskLayout.count() == 3:
                 new_button = QPushButton(self)
                 new_button.setFlat(True)
                 new_button.setText(text)
@@ -80,24 +83,32 @@ class TaskMenu(QWidget):
             button.setText('\u0336'.join(button.text()) + '\u0336')
             self.total_tasks_completed += 1
             self.tasks_completed += 1
+            if self.tasks_completed == self.tasks_to_completion:
+                self.prompt_all_tasks_completed()
+                self.tasks_completed = 0
         else:
             print("Already completed Task")
 
     def remove_last_task(self):
         print("@ tm : remove_last_task")
-        if self.taskLayout.count() > 2:
+        if self.taskLayout.count() > 3:
             self.taskIndex -= 1
             self.taskLayout.itemAt(self.taskLayout.count()-1).widget().deleteLater()
 
     def clear_tasks(self):
         print("@ tm : clear_tasks")
-        self.taskIndex = 2
-        if self.taskLayout.count() > 2:
+        self.taskIndex = 3
+        if self.taskLayout.count() > 3:
             for i in range(self.taskLayout.count()-1, 1, -1):
                 self.taskLayout.itemAt(i).widget().deleteLater()
 
     def set_tasks_till_completion(self, task_num):
         print("@ set_tasks_till_completion")
+        self.tasks_to_completion = task_num
+
+    def prompt_all_tasks_completed(self):
+        print("@ prompt_all_tasks_completed")
+
 
     def set_window_opened(self, opened):
         print("@ set_window_opened")

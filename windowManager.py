@@ -67,6 +67,10 @@ class WindowManager(QWidget):
         print("@ wm : run_app")
         app_name = self.availableApps.currentItem().text()
         whnd = self.appFinder.run_app(app_name)
+        self.winManagerLayout.removeWidget(self.appSearchBox)
+        self.appSearchBox.deleteLater()
+        self.winManagerLayout.removeWidget(self.availableApps)
+        self.availableApps.deleteLater()
         self.parent.change_tab_name(app_name)
         self.set_to_window(whnd)
 
@@ -74,5 +78,6 @@ class WindowManager(QWidget):
         print("@ wm : set_to_window : " + str(window_id))
         self.app_window = QWindow.fromWinId(window_id)
         self.app_window.setFlag(Qt.FramelessWindowHint, True)
-        self.app_widget = QWidget.createWindowContainer(self.app_window, self.parent)
+        self.app_widget = QWidget.createWindowContainer(self.app_window, self)
+        self.winManagerLayout.addWidget(self.app_widget, 0, 0)
         self.app_widget.show()

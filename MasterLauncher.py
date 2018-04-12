@@ -9,6 +9,7 @@
 #
 
 import sys
+import _ctypes
 
 from PyQt5.QtWidgets import QApplication, QMainWindow, QAction, QTabWidget, QWidget, QPushButton, QGridLayout
 
@@ -86,6 +87,8 @@ class MasterLauncher(QMainWindow):
     def close_current_tab(self):
         print("@ ml : close_current_tab")
         self.tab_count -= 1
+        self.tabs.removeTab(self.tab_index)
+        self.switch_tab()
         # set new tab index and such
 
     def open_documentation(self):
@@ -109,6 +112,11 @@ class MasterLauncher(QMainWindow):
         self.tabs.setTabText(tab_index, tab_name)
 
 
+def di(obj_id):
+    """ Inverse of id() function. """
+    return _ctypes.PyObj_FromPtr(obj_id)
+
+
 class TabTable(QWidget):
 
     def __init__(self, parent=None):
@@ -124,7 +132,7 @@ class TabTable(QWidget):
         for tab in range(len(tabs)):
             tab_button = QPushButton(self)
             tab_button.setText(tabs[tab])
-            tab_button.clicked.connect(lambda: self.switch_to_tab(tab))
+            tab_button.clicked.connect(lambda: self.switch_to_tab(di(id(tab))))
             layout.addWidget(tab_button, tab, 0)
         self.setLayout(layout)
 
