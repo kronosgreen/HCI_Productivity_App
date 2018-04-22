@@ -8,8 +8,6 @@
 #
 #
 
-import sys
-
 from PyQt5.QtWidgets import QWidget, QGridLayout
 
 import taskMenu as tm
@@ -30,6 +28,7 @@ class AppWindow(QWidget):
         self.init_ui()
 
     def init_ui(self):
+        print("@ aw : init_ui")
         self.setWindowTitle(self.title)
         layout = QGridLayout()
 
@@ -39,11 +38,7 @@ class AppWindow(QWidget):
 
         self.setLayout(layout)
 
-    def get_intensity(self):
-        print("@ aw : get_intensity")
-        intensity = 3
-        self.set_intensity(intensity)
-
+    # Sets intensity by level
     def set_intensity(self, intensity):
         print("@ aw : set_intensity")
         self.intensity = intensity
@@ -54,9 +49,26 @@ class AppWindow(QWidget):
         elif intensity == 3:
             self.taskMenu.set_tasks_till_completion(7)
 
-    # called when an app is opened
+    # disable window manager if
+    def set_enable_window(self, enable):
+        print("@ aw : set_enable_window")
+        # doesn't work
+        # self.windowManager.setEnabled(enable)
+        if enable:
+            print("Good luck")
+
+    # Disable app to stop receiving input while the intensity is being collected
+    # and open menu to set intensity of task
+    def app_is_run(self):
+        print("@ aw : app_is_run")
+        self.set_enable_window(False)
+        self.parent.open_intensity_menu()
+
+    # App is opened, now update the task manager, update the main app
+    # to include the app name, and start collecting information to start
+    # session.
     def change_tab_name(self, tab_name):
         print("@ aw : change_tab_name & window opened")
         self.parent.change_tab_name(self.tab_index, tab_name)
         self.taskMenu.set_window_opened(True)
-        self.get_intensity()
+        self.app_is_run()

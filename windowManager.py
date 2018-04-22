@@ -67,17 +67,26 @@ class WindowManager(QWidget):
         print("@ wm : run_app")
         app_name = self.availableApps.currentItem().text()
         whnd = self.appFinder.run_app(app_name)
+        if whnd == -1:
+            print("wm : Error, could not get window handle")
+            return
         self.winManagerLayout.removeWidget(self.appSearchBox)
         self.appSearchBox.deleteLater()
         self.winManagerLayout.removeWidget(self.availableApps)
         self.availableApps.deleteLater()
+        self.set_to_window(whnd)
         self.parent.change_tab_name(app_name)
-        self.set_to_window(whnd[1])
 
     def set_to_window(self, window_id):
         print("@ wm : set_to_window : " + str(window_id))
-        self.app_window = QWindow.fromWinId(window_id)
-        self.app_window.setFlag(Qt.FramelessWindowHint, True)
-        self.app_widget = QWidget.createWindowContainer(self.app_window, self, Qt.FramelessWindowHint)
-        self.winManagerLayout.addWidget(self.app_widget, 0, 0)
-        self.app_widget.show()
+        try:
+            self.app_window = QWindow.fromWinId(window_id)
+        except RuntimeError:
+            print("Sorry, Run Time Error ;_;")
+        except OSError:
+            print("Sorry, OS Error ;_;")
+        else:
+            self.app_window.setFlag(Qt.FramelessWindowHint, True)
+            self.app_widget = QWidget.createWindowContainer(self.app_window, self, Qt.FramelessWindowHint)
+            self.winManagerLayout.addWidget(self.app_widget, 0, 0)
+            self.app_widget.show()

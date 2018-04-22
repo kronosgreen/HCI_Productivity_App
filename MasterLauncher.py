@@ -10,16 +10,20 @@
 
 import sys
 import _ctypes
+import time
 
-from PyQt5.QtWidgets import QApplication, QMainWindow, QAction, QTabWidget, QWidget, QPushButton, QGridLayout
-
+from PyQt5.QtWidgets import QApplication, QMainWindow, QAction, QTabWidget, QTableWidget, QPushButton, QGridLayout, QMessageBox
+from PyQt5.QtCore import QWaitCondition
 import productivityApp as pa
+import PopUpMenus as popup
 
 
 class MasterLauncher(QMainWindow):
     def __init__(self):
         print("@ ml : init")
         super().__init__()
+        self.start_time = time.time()
+
         self.tabs = QTabWidget()
         self.tab_count = 1
         self.tab_index = 0
@@ -38,6 +42,7 @@ class MasterLauncher(QMainWindow):
         self.init_menu_bar()
         self.showFullScreen()
 
+    # initialize the menu bar that shows up at the top
     def init_menu_bar(self):
         self.statusBar()
 
@@ -57,9 +62,13 @@ class MasterLauncher(QMainWindow):
         switch_tabs_action = QAction("&Switch Tabs", self)
         switch_tabs_action.triggered.connect(self.switch_tab)
 
+        close_current_tab_action = QAction("&Close Current Tab", self)
+        close_current_tab_action.triggered.connect(self.close_current_tab)
+
+        options.addAction(settings_action)
         options.addAction(new_tab_action)
         options.addAction(switch_tabs_action)
-        options.addAction(settings_action)
+        options.addAction(close_current_tab_action)
         options.addAction(quit_action)
 
         help_menu = main_menu.addMenu('&Help')
@@ -69,13 +78,17 @@ class MasterLauncher(QMainWindow):
 
         help_menu.addAction(documentation_action)
 
+    # close app and print time of use
     def close_app(self):
         print("@ close_app")
+        print("Time of Productivity : " + str(time.time() - self.start_time))
         sys.exit()
 
+    # open settings menu to set intensity task #'s and other such things
     def open_settings(self):
         print("@ ml : open_settings")
 
+    # opens up new tab and goes to it
     def create_new_tab(self):
         print("@ ml : create_new_tab")
         self.tab_count += 1
@@ -84,62 +97,52 @@ class MasterLauncher(QMainWindow):
         self.tabs.addTab(new_tab, "new tab")
         self.tabs.setCurrentIndex(self.tab_index)
 
+    # close current tab, open a new one if none, otherwise allow user to switch to whatever tab
     def close_current_tab(self):
         print("@ ml : close_current_tab")
         self.tab_count -= 1
         self.tabs.removeTab(self.tab_index)
-        self.switch_tab()
-        # set new tab index and such
+        if self.tab_count == 0:
+            self.create_new_tab()
+            self.tab_index = 0
+        else:
+            self.switch_tab()
 
+    # direct user to the documentation online or something
     def open_documentation(self):
         print("@ ml : open_documentation")
 
+    # opens the menu with available tabs to be able to switch to any one
     def switch_tab(self):
         print("@ ml : switch_tab")
         tabs = []
         for tab in range(self.tab_count):
             tabs.append(self.tabs.tabText(tab))
-        tab_menu = TabTable(self)
+        tab_menu = popup.TabTable(self)
         tab_menu.add_tabs(tabs)
+        tab_menu.show()
 
+    # switches tab to specified tab
     def go_to_tab(self, index):
-        print("@ ml : go_to_tab")
+        print("@ ml : go_to_tab " + str(index))
         self.tab_index = index
         self.tabs.setCurrentIndex(self.tab_index)
 
+    # sets the specified tab's text to the name of the application
     def change_tab_name(self, tab_index, tab_name):
         print("@ ml : change_tab_name")
         self.tabs.setTabText(tab_index, tab_name)
 
+    # returns an array of the corresponding number of tasks to complete to intensity
+    def get_intensities(self):
+        print("@ ml : get_intensities")
+        return [self.light_intensity_tasks, self.medium_intensity_tasks, self.high_intensity_tasks]
 
-def di(obj_id):
-    """ Inverse of id() function. """
-    return _ctypes.PyObj_FromPtr(obj_id)
-
-
-class TabTable(QWidget):
-
-    def __init__(self, parent=None):
-        print("@ tab menu : init")
-        super().__init__(parent)
-        self.parent = parent
-        self.show()
-
-    def add_tabs(self, tabs):
-        print("@ tab menu : add_tabs")
-        layout = QGridLayout()
-        self.setMinimumSize(600, 600)
-        for tab in range(len(tabs)):
-            tab_button = QPushButton(self)
-            tab_button.setText(tabs[tab])
-            tab_button.clicked.connect(lambda: self.switch_to_tab(di(id(tab))))
-            layout.addWidget(tab_button, tab, 0)
-        self.setLayout(layout)
-
-    def switch_to_tab(self, index):
-        print("@ tab menu : go_to_tab : " + str(index))
-        self.parent.go_to_tab(index)
-        self.close()
+    def open_intensity_menu(self):
+        print("@ ml : open_intensity_menu")
+        intensity_menu = popup.IntensityMenu(self)
+        intensity_menu.show()
+        # intensity_menu.raise_()
 
 
 if __name__ == '__main__':

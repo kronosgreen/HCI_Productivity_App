@@ -75,6 +75,8 @@ class TaskMenu(QWidget):
                     new_button.clicked.connect(lambda: self.complete_task(new_button))
                     self.taskLayout.addWidget(new_button, self.taskIndex, 0)
                     self.taskIndex += 1
+            if self.taskIndex - 3 == self.tasks_to_completion:
+                self.parent.set_enable_window(True)
 
     @pyqtSlot(QPushButton)
     def complete_task(self, button):
@@ -83,6 +85,7 @@ class TaskMenu(QWidget):
             button.setText('\u0336'.join(button.text()) + '\u0336')
             self.total_tasks_completed += 1
             self.tasks_completed += 1
+            self.task_stats.setText("Tasks Completed : " + str(self.tasks_completed))
             if self.tasks_completed == self.tasks_to_completion:
                 self.prompt_all_tasks_completed()
                 self.tasks_completed = 0
@@ -103,13 +106,13 @@ class TaskMenu(QWidget):
                 self.taskLayout.itemAt(i).widget().deleteLater()
 
     def set_tasks_till_completion(self, task_num):
-        print("@ set_tasks_till_completion")
+        print("@ tm : set_tasks_till_completion")
         self.tasks_to_completion = task_num
 
     def prompt_all_tasks_completed(self):
-        print("@ prompt_all_tasks_completed")
+        print("@ tm : prompt_all_tasks_completed")
         self.parent.parent.switch_tab()
 
     def set_window_opened(self, opened):
-        print("@ set_window_opened")
+        print("@ tm : set_window_opened")
         self.window_opened = opened
