@@ -20,13 +20,13 @@ class TabTable(QTableWidget):
         super().__init__(parent)
         self.parent = parent
         # self.setMinimumSize(600, 600)
+        # self.move(QApplication.desktop().screen().rect().center() - self.rect().center())
         self.setMinimumSize(self.parent.tabs.widget(0).taskMenu.width(),
                             QApplication.desktop().screen().rect().height())
         # Aligns to right
         self.setGeometry(QStyle.alignedRect(Qt.LeftToRight, Qt.AlignRight,
                                             self.size(),
                                             QApplication.desktop().availableGeometry()))
-        # self.move(QApplication.desktop().screen().rect().center() - self.rect().center())
 
     def add_tabs(self, tabs):
         print("@ tab menu : add_tabs")
@@ -44,6 +44,7 @@ class TabTable(QTableWidget):
     def switch_to_tab(self, index):
         print("@ tab menu : go_to_tab : " + str(index))
         self.parent.go_to_tab(index)
+        self.parent.s_tab_menu_open = False
         self.close()
 
 
@@ -60,8 +61,6 @@ class IntensityMenu(QTableWidget):
         self.setGeometry(QStyle.alignedRect(Qt.LeftToRight, Qt.AlignRight,
                                             self.size(),
                                             QApplication.desktop().availableGeometry()))
-        # Center Aligns
-        # self.move(QApplication.desktop().screen().rect().center() - self.rect().center())
         self.add_intensity_buttons()
 
     def add_intensity_buttons(self):
@@ -94,7 +93,7 @@ class IntensityMenu(QTableWidget):
 class TaskCompletionMenu(QTableWidget):
 
     def __init__(self, parent=None):
-        print("@ Intensity Menu : init")
+        print("@ Task Completion Menu : init")
         super().__init__(parent)
         self.setWindowTitle("Set Task Intensity")
         self.parent = parent
@@ -103,24 +102,45 @@ class TaskCompletionMenu(QTableWidget):
         self.setGeometry(QStyle.alignedRect(Qt.LeftToRight, Qt.AlignRight,
                                             self.size(),
                                             QApplication.desktop().availableGeometry()))
-        # Center Aligns
-        # self.move(QApplication.desktop().screen().rect().center() - self.rect().center())
-        self.add_intensity_buttons()
+        self.init_ui()
 
-    def add_intensity_buttons(self):
-        print("@ Intensity Menu : add_intensity_buttons")
+    def init_ui(self):
+        print("@ Task Completion Menu : init_ui")
         layout = QGridLayout()
         label = QLabel()
-        label.setText("Set intensity of the task, please:")
-        label.setMaximumHeight(50)
+        label.setText("Congratulations!\nYou've completed your desired amount of tasks!\n\n"
+                      "Please decide what you'd like to do now")
         layout.addWidget(label, 0, 0)
-        intensity_nums = self.parent.get_intensities()
-        intensities = ["Light Intensity " + str(intensity_nums[0]),
-                       "Medium Intensity " + str(intensity_nums[1]),
-                       "High Intensity " + str(intensity_nums[2])]
-        for i in range(len(intensities)):
-            intensity_button = QPushButton(self)
-            intensity_button.setText(intensities[i])
-            intensity_button.clicked.connect(self.create_intensity_function(i + 1))
-            layout.addWidget(intensity_button, i + 1, 0)
+
+        continue_button = QPushButton(self)
+        continue_button.setText("Continue")
+        continue_button.clicked.connect(self.continue_task)
+        layout.addWidget(continue_button, 1, 0)
+
+        switch_task_button = QPushButton(self)
+        switch_task_button.setText("Switch Tasks")
+        switch_task_button.clicked.connect(self.switch_tasks)
+        layout.addWidget(switch_task_button, 2, 0)
+
+        quit_button = QPushButton(self)
+        quit_button.setText("Quit, I'm all done! \(^-^)/")
+        quit_button.clicked.connect(self.quit)
+        layout.addWidget(quit_button, 3, 0)
+
         self.setLayout(layout)
+
+    def continue_task(self):
+        print("@ Task Completion Menu : continue_task")
+        self.parent.switch_tasks_action.setEnabled(True)
+        self.parent.close_current_tab_action.setEnabled(True)
+        self.parent.new_tab_action.setEnabled(True)
+        self.close()
+
+    def switch_tasks(self):
+        print("@ Task Completion Menu : switch_tasks")
+        self.parent.switch_tasks()
+        self.close()
+
+    def quit(self):
+        print("@ Task Completion Menu : quit")
+        self.parent.close_app()

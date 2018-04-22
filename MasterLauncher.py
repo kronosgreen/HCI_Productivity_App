@@ -31,6 +31,11 @@ class MasterLauncher(QMainWindow):
         self.high_intensity_tasks = 7
         self.medium_intensity_tasks = 5
         self.light_intensity_tasks = 3
+        self.s_tab_menu_open = False
+
+        self.switch_tabs_action = QAction("&Switch Tabs", self)
+        self.new_tab_action = QAction("&New Application", self)
+        self.close_current_tab_action = QAction("&Close Current Tab", self)
 
         self.init_ui()
 
@@ -56,19 +61,16 @@ class MasterLauncher(QMainWindow):
         quit_action.setShortcut("Ctrl+Q")
         quit_action.triggered.connect(self.close_app)
 
-        new_tab_action = QAction("&New Application", self)
-        new_tab_action.triggered.connect(self.create_new_tab)
+        self.new_tab_action.triggered.connect(self.create_new_tab)
 
-        switch_tabs_action = QAction("&Switch Tabs", self)
-        switch_tabs_action.triggered.connect(self.switch_tab)
+        self.switch_tabs_action.triggered.connect(self.switch_tab)
 
-        close_current_tab_action = QAction("&Close Current Tab", self)
-        close_current_tab_action.triggered.connect(self.close_current_tab)
+        self.close_current_tab_action.triggered.connect(self.close_current_tab)
 
         options.addAction(settings_action)
-        options.addAction(new_tab_action)
-        options.addAction(switch_tabs_action)
-        options.addAction(close_current_tab_action)
+        options.addAction(self.new_tab_action)
+        options.addAction(self.switch_tabs_action)
+        options.addAction(self.close_current_tab_action)
         options.addAction(quit_action)
 
         help_menu = main_menu.addMenu('&Help')
@@ -96,6 +98,9 @@ class MasterLauncher(QMainWindow):
         new_tab = pa.AppWindow(self, self.tab_index)
         self.tabs.addTab(new_tab, "new tab")
         self.tabs.setCurrentIndex(self.tab_index)
+        self.switch_tabs_action.setEnabled(False)
+        self.new_tab_action.setEnabled(False)
+        self.close_current_tab_action.setEnabled(False)
 
     # close current tab, open a new one if none, otherwise allow user to switch to whatever tab
     def close_current_tab(self):
@@ -115,12 +120,17 @@ class MasterLauncher(QMainWindow):
     # opens the menu with available tabs to be able to switch to any one
     def switch_tab(self):
         print("@ ml : switch_tab")
-        tabs = []
-        for tab in range(self.tab_count):
-            tabs.append(self.tabs.tabText(tab))
-        tab_menu = popup.TabTable(self)
-        tab_menu.add_tabs(tabs)
-        tab_menu.show()
+        if not self.s_tab_menu_open:
+            self.s_tab_menu_open = True
+            tabs = []
+            for tab in range(self.tab_count):
+                tabs.append(self.tabs.tabText(tab))
+            tab_menu = popup.TabTable(self)
+            tab_menu.add_tabs(tabs)
+            tab_menu.show()
+            self.switch_tabs_action.setEnabled(False)
+            self.new_tab_action.setEnabled(False)
+            self.close_current_tab_action.setEnabled(False)
 
     # switches tab to specified tab
     def go_to_tab(self, index):
@@ -148,7 +158,9 @@ class MasterLauncher(QMainWindow):
     # opens menu that appears when all tasks are complete
     def complete(self):
         print("@ ml : complete")
-        completion_menu = popup.TaskCompletionMenu
+        completion_menu = popup.TaskCompletionMenu(self)
+        completion_menu.show()
+
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
