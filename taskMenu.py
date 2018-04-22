@@ -111,7 +111,7 @@ class TaskMenu(QWidget):
 
     def prompt_all_tasks_completed(self):
         print("@ tm : prompt_all_tasks_completed")
-        self.parent.parent.switch_tab()
+        self.parent.parent.complete()
 
     def set_window_opened(self, opened):
         print("@ tm : set_window_opened")

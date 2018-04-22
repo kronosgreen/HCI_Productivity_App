@@ -42,12 +42,8 @@ class AppWindow(QWidget):
     def set_intensity(self, intensity):
         print("@ aw : set_intensity")
         self.intensity = intensity
-        if intensity == 1:
-            self.taskMenu.set_tasks_till_completion(3)
-        elif intensity == 2:
-            self.taskMenu.set_tasks_till_completion(5)
-        elif intensity == 3:
-            self.taskMenu.set_tasks_till_completion(7)
+        task_numbers = self.parent.get_intensities()
+        self.taskMenu.set_tasks_till_completion(task_numbers[intensity - 1])
 
     # disable window manager if
     def set_enable_window(self, enable):
