@@ -138,12 +138,17 @@ class MasterLauncher(QMainWindow):
         print("@ ml : get_intensities")
         return [self.light_intensity_tasks, self.medium_intensity_tasks, self.high_intensity_tasks]
 
+    # opens menu to select intensity before continuing
     def open_intensity_menu(self):
         print("@ ml : open_intensity_menu")
         intensity_menu = popup.IntensityMenu(self)
         intensity_menu.show()
         # intensity_menu.raise_()
 
+    # opens menu that appears when all tasks are complete
+    def complete(self):
+        print("@ ml : complete")
+        completion_menu = popup.TaskCompletionMenu
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
