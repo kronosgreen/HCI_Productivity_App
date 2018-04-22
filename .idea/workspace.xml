@@ -1,12 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="f97e5c5d-2912-4fe8-9854-cc58ac3f510a" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change beforePath="$PROJECT_DIR$/MasterLauncher.py" afterPath="$PROJECT_DIR$/MasterLauncher.py" />
-      <change beforePath="$PROJECT_DIR$/PopUpMenus.py" afterPath="$PROJECT_DIR$/PopUpMenus.py" />
-      <change beforePath="$PROJECT_DIR$/productivityApp.py" afterPath="$PROJECT_DIR$/productivityApp.py" />
-    </list>
+    <list default="true" id="f97e5c5d-2912-4fe8-9854-cc58ac3f510a" name="Default" comment="" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
