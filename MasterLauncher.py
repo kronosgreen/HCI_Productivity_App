@@ -37,7 +37,7 @@ class MasterLauncher(QMainWindow):
     def init_ui(self):
         first_tab = pa.AppWindow(self, 0)
         self.tabs.addTab(first_tab, "first_app")
-        # self.tabs.tabBar().setVisible(False)
+        self.tabs.tabBar().setVisible(False)
         self.setCentralWidget(self.tabs)
         self.init_menu_bar()
         self.showFullScreen()
