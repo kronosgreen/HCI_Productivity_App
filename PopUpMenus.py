@@ -131,7 +131,7 @@ class TaskCompletionMenu(QTableWidget):
 
     def continue_task(self):
         print("@ Task Completion Menu : continue_task")
-        self.parent.switch_tasks_action.setEnabled(True)
+        self.parent.switch_tabs_action.setEnabled(True)
         self.parent.close_current_tab_action.setEnabled(True)
         self.parent.new_tab_action.setEnabled(True)
         self.close()

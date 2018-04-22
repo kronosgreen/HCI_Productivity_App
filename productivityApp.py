@@ -9,6 +9,7 @@
 #
 
 from PyQt5.QtWidgets import QWidget, QGridLayout
+from PyQt5.Qt import QRegion
 
 import taskMenu as tm
 import windowManager as wm
@@ -21,6 +22,7 @@ class AppWindow(QWidget):
         super().__init__()
         self.parent = parent
         self.title = 'Productivity App Window'
+        self.region = None
         self.tab_index = tab_index
         self.intensity = 3
         self.windowManager = wm.WindowManager(self)
@@ -48,10 +50,12 @@ class AppWindow(QWidget):
     # disable window manager if
     def set_enable_window(self, enable):
         print("@ aw : set_enable_window")
-        # doesn't work
-        # self.windowManager.setEnabled(enable)
-        if enable:
+        if not enable:
+            self.region = QRegion(self.windowManager.geometry())
+            self.windowManager.setMask(self.region)
+        else:
             print("Good luck")
+            del self.region
 
     # Disable app to stop receiving input while the intensity is being collected
     # and open menu to set intensity of task

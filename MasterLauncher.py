@@ -73,6 +73,10 @@ class MasterLauncher(QMainWindow):
         options.addAction(self.close_current_tab_action)
         options.addAction(quit_action)
 
+        self.switch_tabs_action.setEnabled(False)
+        self.close_current_tab_action.setEnabled(False)
+        self.new_tab_action.setEnabled(False)
+
         help_menu = main_menu.addMenu('&Help')
 
         documentation_action = QAction("&Open Documentation", self)

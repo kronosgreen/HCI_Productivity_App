@@ -5,6 +5,7 @@
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change beforePath="$PROJECT_DIR$/MasterLauncher.py" afterPath="$PROJECT_DIR$/MasterLauncher.py" />
       <change beforePath="$PROJECT_DIR$/PopUpMenus.py" afterPath="$PROJECT_DIR$/PopUpMenus.py" />
+      <change beforePath="$PROJECT_DIR$/productivityApp.py" afterPath="$PROJECT_DIR$/productivityApp.py" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -15,11 +16,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="375">
-      <file leaf-file-name="MasterLauncher.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="MasterLauncher.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/MasterLauncher.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-2019">
-              <caret line="67" column="79" lean-forward="true" selection-start-line="67" selection-start-column="79" selection-end-line="67" selection-end-column="79" />
+            <state relative-caret-position="1317">
+              <caret line="166" column="0" lean-forward="true" selection-start-line="166" selection-start-column="0" selection-end-line="166" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -28,19 +29,21 @@
       <file leaf-file-name="PopUpMenus.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/PopUpMenus.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="117">
-              <caret line="133" column="56" lean-forward="false" selection-start-line="133" selection-start-column="56" selection-end-line="133" selection-end-column="56" />
+            <state relative-caret-position="141">
+              <caret line="134" column="28" lean-forward="true" selection-start-line="134" selection-start-column="28" selection-end-line="134" selection-end-column="28" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="productivityApp.py" pinned="false" current-in-tab="false">
+      <file leaf-file-name="productivityApp.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/productivityApp.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="0">
-              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-              <folding />
+            <state relative-caret-position="312">
+              <caret line="65" column="0" lean-forward="true" selection-start-line="65" selection-start-column="0" selection-end-line="65" selection-end-column="0" />
+              <folding>
+                <element signature="e#82#130#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -48,7 +51,7 @@
       <file leaf-file-name="AppFinder.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/AppFinder.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-1179">
+            <state relative-caret-position="0">
               <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
               <folding />
             </state>
@@ -58,8 +61,8 @@
       <file leaf-file-name="windowManager.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/windowManager.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-1659">
-              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+            <state relative-caret-position="285">
+              <caret line="32" column="46" lean-forward="true" selection-start-line="32" selection-start-column="46" selection-end-line="32" selection-end-column="46" />
               <folding />
             </state>
           </provider>
@@ -85,6 +88,7 @@
       <list>
         <option value="$PROJECT_DIR$/MasterLauncher.py" />
         <option value="$PROJECT_DIR$/PopUpMenus.py" />
+        <option value="$PROJECT_DIR$/productivityApp.py" />
       </list>
     </option>
   </component>
@@ -109,8 +113,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scratches" />
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -122,6 +124,8 @@
           <select />
         </subPane>
       </pane>
+      <pane id="Scope" />
+      <pane id="Scratches" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -213,6 +217,56 @@
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/MasterLauncher.py">
       <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/PopUpMenus.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="3168">
+          <caret line="133" column="56" lean-forward="false" selection-start-line="133" selection-start-column="56" selection-end-line="133" selection-end-column="56" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/AppFinder.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/productivityApp.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding>
+            <element signature="e#82#130#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/windowManager.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/taskMenu.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/MasterLauncher.py">
+      <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="3432">
           <caret line="150" column="50" lean-forward="false" selection-start-line="150" selection-start-column="50" selection-end-line="150" selection-end-column="50" />
           <folding />
@@ -223,7 +277,9 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
+          <folding>
+            <element signature="e#82#130#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -267,7 +323,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/productivityApp.py">
+    <entry file="file://$PROJECT_DIR$/AppFinder.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
@@ -275,35 +331,37 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/AppFinder.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1179">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/windowManager.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1659">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/PopUpMenus.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="117">
-          <caret line="133" column="56" lean-forward="false" selection-start-line="133" selection-start-column="56" selection-end-line="133" selection-end-column="56" />
+        <state relative-caret-position="141">
+          <caret line="134" column="28" lean-forward="true" selection-start-line="134" selection-start-column="28" selection-end-line="134" selection-end-column="28" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/MasterLauncher.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-2019">
-          <caret line="67" column="79" lean-forward="true" selection-start-line="67" selection-start-column="79" selection-end-line="67" selection-end-column="79" />
+        <state relative-caret-position="1317">
+          <caret line="166" column="0" lean-forward="true" selection-start-line="166" selection-start-column="0" selection-end-line="166" selection-end-column="0" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/windowManager.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="285">
+          <caret line="32" column="46" lean-forward="true" selection-start-line="32" selection-start-column="46" selection-end-line="32" selection-end-column="46" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/productivityApp.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="312">
+          <caret line="65" column="0" lean-forward="true" selection-start-line="65" selection-start-column="0" selection-end-line="65" selection-end-column="0" />
+          <folding>
+            <element signature="e#82#130#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
