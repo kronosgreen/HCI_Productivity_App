@@ -9,11 +9,10 @@
 #
 
 import sys
-import _ctypes
+import win32gui
 import time
 
-from PyQt5.QtWidgets import QApplication, QMainWindow, QAction, QTabWidget, QTableWidget, QPushButton, QGridLayout, QMessageBox
-from PyQt5.QtCore import QWaitCondition
+from PyQt5.QtWidgets import QApplication, QMainWindow, QAction, QTabWidget
 import productivityApp as pa
 import PopUpMenus as popup
 
@@ -28,6 +27,8 @@ class MasterLauncher(QMainWindow):
         self.tab_count = 1
         self.tab_index = 0
 
+        # defaults
+        self.startup_folder = 'C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs'
         self.high_intensity_tasks = 7
         self.medium_intensity_tasks = 5
         self.light_intensity_tasks = 3
@@ -57,6 +58,9 @@ class MasterLauncher(QMainWindow):
         settings_action = QAction("&Settings", self)
         settings_action.triggered.connect(self.open_settings)
 
+        get_window_action = QAction("&Get Missing Window", self)
+        get_window_action.triggered.connect(self.recover_window)
+
         quit_action = QAction("&Quit Application", self)
         quit_action.setShortcut("Ctrl+Q")
         quit_action.triggered.connect(self.close_app)
@@ -68,6 +72,7 @@ class MasterLauncher(QMainWindow):
         self.close_current_tab_action.triggered.connect(self.close_current_tab)
 
         options.addAction(settings_action)
+        options.addAction(get_window_action)
         options.addAction(self.new_tab_action)
         options.addAction(self.switch_tabs_action)
         options.addAction(self.close_current_tab_action)
@@ -166,6 +171,26 @@ class MasterLauncher(QMainWindow):
         print("@ ml : complete")
         completion_menu = popup.TaskCompletionMenu(self)
         completion_menu.show()
+
+    def recover_window(self):
+        def enum_handler(hwnd, data):
+            print("enum handler")
+            if win32gui.IsWindowVisible(hwnd):
+                print("what")
+                try:
+                    handles.append(hwnd)
+                except ValueError:
+                    print("@ enum_handler : Value Error")
+
+        print("@ ml : recover_window")
+        handles = []
+        win32gui.EnumWindows(enum_handler, None)
+        recover_menu = popup.RecoverMenu(self)
+        recover_menu.add_handles(handles)
+        recover_menu.show()
+
+
+
 
 
 if __name__ == '__main__':

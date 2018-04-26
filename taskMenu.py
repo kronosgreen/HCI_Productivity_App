@@ -25,6 +25,7 @@ class TaskMenu(QWidget):
         self.taskList = []
         self.taskIndex = 3
         self.textBox = QLineEdit(self)
+        self.textBox.returnPressed.connect(self.add_task)
         self.task_stats = QLabel()
         self.taskLayout = QGridLayout()
         self.init_ui()
@@ -66,6 +67,7 @@ class TaskMenu(QWidget):
                 new_button.setText(text)
                 new_button.clicked.connect(lambda: self.complete_task(new_button))
                 self.taskLayout.addWidget(new_button, self.taskIndex, 0)
+                self.textBox.setText("")
                 self.taskIndex += 1
             else:
                 if text != self.taskLayout.itemAt(self.taskLayout.count()-1).widget().text():
@@ -74,6 +76,7 @@ class TaskMenu(QWidget):
                     new_button.setText(text)
                     new_button.clicked.connect(lambda: self.complete_task(new_button))
                     self.taskLayout.addWidget(new_button, self.taskIndex, 0)
+                    self.textBox.setText("")
                     self.taskIndex += 1
             if self.taskIndex - 3 == self.tasks_to_completion:
                 self.parent.set_enable_window(True)

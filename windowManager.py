@@ -8,12 +8,9 @@
 #
 #
 
-
-from PyQt5.QtWidgets import QWidget, QApplication, QPushButton, QGridLayout, QLineEdit, \
-    QMainWindow, QListWidget, QDockWidget, \
-    QLayout, QAction
-from PyQt5.QtGui import QIcon, QWindow, QPageLayout, QActionEvent
-from PyQt5.QtCore import Qt, pyqtSlot, QObject
+from PyQt5.QtWidgets import QWidget, QGridLayout, QLineEdit, QListWidget
+from PyQt5.QtGui import QWindow
+from PyQt5.QtCore import Qt
 
 import AppFinder as ap
 
@@ -25,9 +22,10 @@ class WindowManager(QWidget):
         super().__init__(parent)
         self.parent = parent
         self.title = 'Window Manager Prototype'
+        self.widgets_active = True
         self.app_widget = None
         self.app_window = None
-        self.appFinder = ap.AppFinder()
+        self.appFinder = ap.AppFinder(self)
         self.apps = self.appFinder.shortcut_names
         self.appSearchBox = QLineEdit(self)
         self.availableApps = QListWidget(self)
@@ -70,15 +68,17 @@ class WindowManager(QWidget):
         if whnd == -1:
             print("wm : Error, could not get window handle")
             return
-        self.winManagerLayout.removeWidget(self.appSearchBox)
-        self.appSearchBox.deleteLater()
-        self.winManagerLayout.removeWidget(self.availableApps)
-        self.availableApps.deleteLater()
         self.set_to_window(whnd)
         self.parent.change_tab_name(app_name)
 
     def set_to_window(self, window_id):
         print("@ wm : set_to_window : " + str(window_id))
+        if self.widgets_active:
+            self.winManagerLayout.removeWidget(self.appSearchBox)
+            self.appSearchBox.deleteLater()
+            self.winManagerLayout.removeWidget(self.availableApps)
+            self.availableApps.deleteLater()
+            self.widgets_active = False
         try:
             self.app_window = QWindow.fromWinId(window_id)
         except RuntimeError:

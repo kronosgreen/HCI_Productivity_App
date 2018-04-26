@@ -16,10 +16,10 @@ import os
 
 class AppFinder:
 
-    def __init__(self):
+    def __init__(self, parent=None):
         print("@ af : init")
-        self.shortcut_folder = 'C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs'
-        self.window_search_timeout = 10
+        self.shortcut_folder = parent.parent.parent.startup_folder
+        self.window_search_timeout = 15
         self.shortcuts = []
         self.shortcut_names = []
         self.top_windows = []
@@ -53,14 +53,13 @@ class AppFinder:
         for i in range(len(self.shortcut_names)):
             if name == self.shortcut_names[i]:
                 os.startfile(self.shortcuts[i])
-                time.sleep(1)
                 break
-
+        time.sleep(1)
+        print("Searching for Handle")
         handle = win32gui.GetForegroundWindow()
         while handle == og_handle:
             handle = win32gui.GetForegroundWindow()
-            print("@ af : Checking " + str(handle))
-            time.sleep(0.2)
+            time.sleep(0.3)
             if time.time() - start_time >= self.window_search_timeout:
                 print("@ af : Window Search timed out ;_;")
                 return -1
