@@ -93,6 +93,8 @@ class MasterLauncher(QMainWindow):
     # open settings menu to set intensity task #'s and other such things
     def open_settings(self):
         print("@ ml : open_settings")
+        settings = popup.SettingsMenu(self)
+        settings.show()
 
     # opens up new tab and goes to it
     def create_new_tab(self):
