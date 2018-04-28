@@ -13,6 +13,9 @@ from PyQt5.QtGui import QWindow
 from PyQt5.QtCore import Qt
 
 import AppFinder as ap
+import win32gui
+
+import win32process
 
 
 class WindowManager(QWidget):
@@ -67,7 +70,9 @@ class WindowManager(QWidget):
         whnd = self.appFinder.run_app(app_name)
         if whnd == -1:
             print("wm : Error, could not get window handle")
+            self.parent.parent.recover_window()
             return
+        self.parent.parent.process_ids.append(win32process.GetWindowThreadProcessId(whnd))
         self.set_to_window(whnd)
         self.parent.change_tab_name(app_name)
 
@@ -87,6 +92,7 @@ class WindowManager(QWidget):
             print("Sorry, OS Error ;_;")
         else:
             self.app_window.setFlag(Qt.FramelessWindowHint, True)
+            # win32gui.SetForegroundWindow(self.app_window)
             self.app_widget = QWidget.createWindowContainer(self.app_window, self, Qt.FramelessWindowHint)
             self.winManagerLayout.addWidget(self.app_widget, 0, 0)
             self.app_widget.show()

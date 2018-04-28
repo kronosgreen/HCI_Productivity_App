@@ -10,7 +10,9 @@
 
 import sys
 import win32gui
+import os
 import time
+import atexit
 
 from PyQt5.QtWidgets import QApplication, QMainWindow, QAction, QTabWidget
 import productivityApp as pa
@@ -23,6 +25,8 @@ class MasterLauncher(QMainWindow):
         super().__init__()
         self.start_time = time.time()
 
+        self.process_ids = []
+
         self.tabs = QTabWidget()
         self.tab_count = 1
         self.tab_index = 0
@@ -32,8 +36,12 @@ class MasterLauncher(QMainWindow):
         self.high_intensity_tasks = 7
         self.medium_intensity_tasks = 5
         self.light_intensity_tasks = 3
-        self.s_tab_menu_open = False
 
+        self.s_tab_menu_open = False
+        self.settings_menu_open = False
+        self.recover_menu_open = False
+
+        self.quit_action = QAction("&Quit Application", self)
         self.switch_tabs_action = QAction("&Switch Tabs", self)
         self.new_tab_action = QAction("&New Application", self)
         self.close_current_tab_action = QAction("&Close Current Tab", self)
@@ -61,9 +69,8 @@ class MasterLauncher(QMainWindow):
         get_window_action = QAction("&Get Missing Window", self)
         get_window_action.triggered.connect(self.recover_window)
 
-        quit_action = QAction("&Quit Application", self)
-        quit_action.setShortcut("Ctrl+Q")
-        quit_action.triggered.connect(self.close_app)
+        self.quit_action.setShortcut("Ctrl+Q")
+        self.quit_action.triggered.connect(self.close_app)
 
         self.new_tab_action.triggered.connect(self.create_new_tab)
 
@@ -76,7 +83,7 @@ class MasterLauncher(QMainWindow):
         options.addAction(self.new_tab_action)
         options.addAction(self.switch_tabs_action)
         options.addAction(self.close_current_tab_action)
-        options.addAction(quit_action)
+        options.addAction(self.quit_action)
 
         self.switch_tabs_action.setEnabled(False)
         self.close_current_tab_action.setEnabled(False)
@@ -93,13 +100,18 @@ class MasterLauncher(QMainWindow):
     def close_app(self):
         print("@ close_app")
         print("Time of Productivity : " + str(time.time() - self.start_time))
-        sys.exit()
+        self.tabs.widget(self.tab_index).close()
+        survey = popup.FinalSurvey(self)
+        survey.show()
+        self.quit_action.setEnabled(False)
 
     # open settings menu to set intensity task #'s and other such things
     def open_settings(self):
         print("@ ml : open_settings")
-        settings = popup.SettingsMenu(self)
-        settings.show()
+        if not self.settings_menu_open:
+            self.settings_menu_open = True
+            settings = popup.SettingsMenu(self)
+            settings.show()
 
     # opens up new tab and goes to it
     def create_new_tab(self):
@@ -183,17 +195,22 @@ class MasterLauncher(QMainWindow):
                     print("@ enum_handler : Value Error")
 
         print("@ ml : recover_window")
-        handles = []
-        win32gui.EnumWindows(enum_handler, None)
-        recover_menu = popup.RecoverMenu(self)
-        recover_menu.add_handles(handles)
-        recover_menu.show()
+        if not self.recover_menu_open:
+            self.recover_menu_open = True
+            handles = []
+            win32gui.EnumWindows(enum_handler, None)
+            recover_menu = popup.RecoverMenu(self)
+            recover_menu.add_handles(handles)
+            recover_menu.show()
 
-
-
+    def clear_processes(self):
+        print("@ ml : clear_processes")
+        for pid in self.process_ids:
+            os.kill(pid)
 
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
     ex = MasterLauncher()
+    atexit.register(ex.clear_processes)
     sys.exit(app.exec_())

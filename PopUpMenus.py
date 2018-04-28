@@ -9,9 +9,11 @@
 #
 
 import win32gui
+import win32process
+import sys
 
-from PyQt5.QtWidgets import QApplication, QTableWidget, QPushButton, QGridLayout, \
-    QStyle, QLabel, QLineEdit, QVBoxLayout, QScrollArea
+from PyQt5.QtWidgets import QApplication, QTableWidget, QPushButton, QGridLayout, QTextEdit, \
+    QStyle, QLabel, QLineEdit, QVBoxLayout, QScrollArea, QButtonGroup, QRadioButton, QHBoxLayout
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QPixmap, QFont
 
@@ -152,7 +154,7 @@ class TaskCompletionMenu(QTableWidget):
 
     def switch_tasks(self):
         print("@ Task Completion Menu : switch_tasks")
-        self.parent.switch_tasks()
+        self.parent.switch_tab()
         self.close()
 
     def new_task(self):
@@ -282,16 +284,19 @@ class SettingsMenu(QTableWidget):
         self.parent.switch_tabs_action.setEnabled(True)
         self.parent.close_current_tab_action.setEnabled(True)
         self.parent.new_tab_action.setEnabled(True)
+        self.parent.settings_menu_open = False
         self.close()
 
     def switch_tasks(self):
         print("@ Settings Menu : switch_tasks")
-        self.parent.switch_tasks()
+        self.parent.switch_tab()
+        self.parent.settings_menu_open = False
         self.close()
 
     def new_task(self):
         print("@ Settings Menu : new_task")
         self.parent.create_new_tab()
+        self.parent.settings_menu_open = False
         self.close()
 
     def quit(self):
@@ -318,8 +323,10 @@ class SettingsMenu(QTableWidget):
             self.parent.high_intensity_tasks = 3
             self.parent.medium_intensity_tasks = 5
             self.parent.light_intensity_tasks = 7
+            self.parent.settings_menu_open = False
             self.close()
         else:
+            self.parent.settings_menu_open = False
             self.close()
 
 
@@ -338,6 +345,7 @@ class RecoverMenu(QTableWidget):
         self.setGeometry(QStyle.alignedRect(Qt.LeftToRight, Qt.AlignRight,
                                             self.size(),  QApplication.desktop().availableGeometry()))
         self.layout = QGridLayout()
+        self.init_ui()
 
     def init_ui(self):
         print("@ Recover Menu : init_ui")
@@ -366,4 +374,90 @@ class RecoverMenu(QTableWidget):
 
     def window_function(self, handle):
         self.parent.tabs.widget(self.parent.tab_index).windowManager.set_to_window(handle)
+        self.parent.process_ids.append(win32process.GetWindowThreadProcessId(handle))
+        self.parent.recover_menu_open = False
         self.close()
+
+
+class FinalSurvey(QTableWidget):
+
+    def __init__(self, parent=None):
+        print("@ Final Survey : init")
+        super().__init__(parent)
+        self.app_rating = 0
+        self.productivity_rating = 0
+
+        self.rating_group = None
+        self.productivity_group = None
+
+        self.comments = QTextEdit()
+
+        self.init_ui()
+
+    def init_ui(self):
+        print("@ Final Survey : init_ui")
+        self.setMinimumHeight(400)
+        self.setMinimumWidth(900)
+        self.move(QApplication.desktop().rect().center() - self.rect().center())
+
+        layout = QGridLayout()
+
+        rating_prompt = QLabel()
+        rating_prompt.setText("From a scale of 1 for “why would you waste my time” to 7 for \n"
+                              "“Perfection incarnate,” how was your experience with the application:")
+        layout.addWidget(rating_prompt, 0, 0)
+
+        rating_buttons = [QRadioButton(str(i+1)) for i in range(7)]
+        rating_buttons[0].setChecked(True)
+        self.rating_group = QButtonGroup()
+        rating_group_layout = QHBoxLayout()
+        for b in range(len(rating_buttons)):
+            rating_group_layout.addWidget(rating_buttons[b])
+            self.rating_group.addButton(rating_buttons[b])
+            rating_buttons[b].clicked.connect(self.rating_set)
+        layout.addLayout(rating_group_layout, 0, 1)
+
+        productivity_prompt = QLabel()
+        productivity_prompt.setText("From a -3 for “damn, it made it worse, what the fuck is this” \n"
+                                    "to 3 for “Oh my God I was in the clouds, it’s better than cocaine”, \n"
+                                    "how did you feel your productivity was affected through the application:")
+        layout.addWidget(productivity_prompt, 1, 0)
+
+        productivity_buttons = [QRadioButton(str(i - 3)) for i in range(7)]
+        productivity_buttons[3].setChecked(True)
+        self.productivity_group = QButtonGroup()
+        productivity_group_layout = QHBoxLayout()
+        for b in range(len(rating_buttons)):
+            productivity_group_layout.addWidget(productivity_buttons[b])
+            self.productivity_group.addButton(productivity_buttons[b])
+            productivity_buttons[b].clicked.connect(self.productivity_set)
+        layout.addLayout(productivity_group_layout, 1, 1)
+
+        comments_prompt = QLabel()
+        comments_prompt.setText("Any bugs you experienced, suggestions, comments? Write ‘em here; \n"
+                                "be nice, or not, I just want an A...")
+        layout.addWidget(comments_prompt, 2, 0)
+
+        self.comments.setPlaceholderText("Enter comments here...")
+        layout.addWidget(self.comments, 3, 0)
+
+        submit_button = QPushButton()
+        submit_button.setText("Submit")
+        submit_button.clicked.connect(self.submit_survey)
+        layout.addWidget(submit_button, 4, 1)
+
+        self.setLayout(layout)
+
+    def productivity_set(self):
+        print("@ Final Survey : productivity_set")
+        self.productivity_rating = self.productivity_group.checkedButton().text()
+
+    def rating_set(self):
+        print("@ Final Survey : rating_set")
+        self.app_rating = self.rating_group.checkedButton().text()
+
+    def submit_survey(self):
+        print("@ Final Survey : submit_survey")
+
+        sys.exit()
+
