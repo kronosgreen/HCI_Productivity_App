@@ -17,7 +17,7 @@ The Window Manager serves as the menu to choose which application is to be run a
 Here you can manage the means by which progress is tracked. By typing into the text box and either clicking the ‘Add Task’ button or pressing ‘Enter,’ a task is created and shown below. Once the task is complete, you can click on the task in the Task Menu to mark it down. The text changes to have the ‘strikethrough’ decoration, and the counter above is added to. The number of tasks needed to change to a different job is determined at the intensity menu opened as soon as the application is opened. The defaults are 3 tasks for light intensity, 5 for medium intensity, and 7 for high intensity, but these can be changed in the settings menu. Once the task counter hits the number of tasks desired, a menu is brought up to determine what is to be done next. From here, you can decide to continue on the same job, switch to a different one, create a new one, or quit the application.
 
 ### Bugs
-⋅⋅*To ensure one is never stuck at a specific tab, Options > Settings allows to switch tasks, create new tasks etc.
-⋅⋅*Processes are not killed when the app is closed, so you must do that manually through the Task Manager
-⋅⋅*Certain windows when grabbed do not allow for text input; to type into something such as an address bar, use the task menu, then right click copy and paste
-⋅⋅*Certain apps have menu windows different from the actual windows; open the window where you will be working first, then use Options > Get Missing Window to grab
+*To ensure one is never stuck at a specific tab, Options > Settings allows to switch tasks, create new tasks etc.
+*Processes are not killed when the app is closed, so you must do that manually through the Task Manager
+*Certain windows when grabbed do not allow for text input; to type into something such as an address bar, use the task menu, then right click copy and paste
+*Certain apps have menu windows different from the actual windows; open the window where you will be working first, then use Options > Get Missing Window to grab
