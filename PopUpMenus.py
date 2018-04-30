@@ -11,6 +11,9 @@
 import win32gui
 import win32process
 import sys
+import pyodbc
+from random import randint
+from datetime import datetime
 
 from PyQt5.QtWidgets import QApplication, QTableWidget, QPushButton, QGridLayout, QTextEdit, \
     QStyle, QLabel, QLineEdit, QVBoxLayout, QScrollArea, QButtonGroup, QRadioButton, QHBoxLayout
@@ -315,9 +318,12 @@ class SettingsMenu(QTableWidget):
     def apply_and_close(self):
         print("@ Settings Menu : apply_and_close")
         try:
-            self.parent.high_intensity_tasks = int(self.h_task_input.text())
-            self.parent.medium_intensity_tasks = int(self.m_task_input.text())
-            self.parent.light_intensity_tasks = int(self.l_task_input.text())
+            if len(self.h_task_input.text()) > 0:
+                self.parent.high_intensity_tasks = int(self.h_task_input.text())
+            if len(self.m_task_input.text()) > 0:
+                self.parent.medium_intensity_tasks = int(self.m_task_input.text())
+            if len(self.l_task_input.text()) > 0:
+                self.parent.light_intensity_tasks = int(self.l_task_input.text())
         except ValueError:
             print("@ apply_and_close : Value Error")
             self.parent.high_intensity_tasks = 3
@@ -441,6 +447,10 @@ class FinalSurvey(QTableWidget):
         self.comments.setPlaceholderText("Enter comments here...")
         layout.addWidget(self.comments, 3, 0)
 
+        final_picture = QLabel()
+        final_picture.setPixmap(QPixmap("happy.png"))
+        layout.addWidget(final_picture, 3, 1)
+
         submit_button = QPushButton()
         submit_button.setText("Submit")
         submit_button.clicked.connect(self.submit_survey)
@@ -458,6 +468,24 @@ class FinalSurvey(QTableWidget):
 
     def submit_survey(self):
         print("@ Final Survey : submit_survey")
-
-        sys.exit()
+        try:
+            cnxn = pyodbc.connect("Driver={SQL Server Native Client 11.0};"
+                                  "Server=focustask.org;"
+                                  "Port=3306"
+                                  "Database=FOCUSTASK;"
+                                  "Trusted_Connection=yes;"
+                                  "UID=USER;"
+                                  "PWD=PASSWORD;")
+        except pyodbc.Error as ex:
+            print("Error: " + str(ex.args[1]))
+            sys.exit()
+        else:
+            print("Connected")
+            survey_id = randint(1, datetime.now())
+            command = "INSERT INTO SURVEYDATA (ID,APPRATING,PRODUCTIVITYRATING,COMMENTS) VALUES " \
+                      "(%d, %d, %d, %s);" % survey_id, self.app_rating, self.productivity_rating, self.comments.text()
+            cursor = cnxn.cursor()
+            cursor.execute(command)
+            cnxn.commit()
+            sys.exit()
 

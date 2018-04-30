@@ -13,6 +13,7 @@ import win32gui
 import os
 import time
 import atexit
+import webbrowser
 
 from PyQt5.QtWidgets import QApplication, QMainWindow, QAction, QTabWidget
 import productivityApp as pa
@@ -139,6 +140,7 @@ class MasterLauncher(QMainWindow):
     # direct user to the documentation online or something
     def open_documentation(self):
         print("@ ml : open_documentation")
+        webbrowser.open("focustask.org/documentation")
 
     # opens the menu with available tabs to be able to switch to any one
     def switch_tab(self):

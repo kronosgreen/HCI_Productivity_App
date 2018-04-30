@@ -12,7 +12,6 @@
 import win32gui
 import time
 import os
-import subprocess
 
 
 class AppFinder:
