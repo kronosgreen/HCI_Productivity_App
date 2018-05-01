@@ -11,9 +11,8 @@
 import win32gui
 import win32process
 import sys
-import pyodbc
-from random import randint
-from datetime import datetime
+import pycurl
+from urllib.parse import urlencode
 
 from PyQt5.QtWidgets import QApplication, QTableWidget, QPushButton, QGridLayout, QTextEdit, \
     QStyle, QLabel, QLineEdit, QVBoxLayout, QScrollArea, QButtonGroup, QRadioButton, QHBoxLayout
@@ -468,24 +467,14 @@ class FinalSurvey(QTableWidget):
 
     def submit_survey(self):
         print("@ Final Survey : submit_survey")
-        try:
-            cnxn = pyodbc.connect("Driver={SQL Server Native Client 11.0};"
-                                  "Server=focustask.org;"
-                                  "Port=3306"
-                                  "Database=FOCUSTASK;"
-                                  "Trusted_Connection=yes;"
-                                  "UID=USER;"
-                                  "PWD=PASSWORD;")
-        except pyodbc.Error as ex:
-            print("Error: " + str(ex.args[1]))
-            sys.exit()
-        else:
-            print("Connected")
-            survey_id = randint(1, datetime.now())
-            command = "INSERT INTO SURVEYDATA (ID,APPRATING,PRODUCTIVITYRATING,COMMENTS) VALUES " \
-                      "(%d, %d, %d, %s);" % survey_id, self.app_rating, self.productivity_rating, self.comments.text()
-            cursor = cnxn.cursor()
-            cursor.execute(command)
-            cnxn.commit()
-            sys.exit()
 
+        c = pycurl.Curl()
+        c.setopt(c.URL, "api.focustask.org/appreview")
+        post_data = {'apprating': self.app_rating,
+                     'productivityrating': self.productivity_rating,
+                     'comments': self.comments.toPlainText()}
+        postfields = urlencode(post_data)
+        c.setopt(c.POSTFIELDS, postfields)
+        c.perform()
+        c.close()
+        sys.exit()
